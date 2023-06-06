@@ -15,7 +15,7 @@ namespace Ritsukage.QQ.Commands
         [CommandDescription("ljyys")]
         public static async void Generate(SoraMessage e)
         {
-            await e.ReplyToOriginal(SoraSegment.Image("ljyys.jpg"));
+            await e.ReplyToOriginal(SoraSegment.Image("/ljyys.jpg"));
         }
     }
 }
