@@ -1,11 +1,14 @@
-﻿using NLog;
+﻿using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using NLog;
+using NLog.Extensions.Logging;
 using RUCore.Common.Logging;
 using System.Diagnostics;
 using System.Text;
 
 Console.Title = "Ritsukage Core";
 DateTime LaunchTime = DateTime.Now;
-Logger logger = CoreLogger.GetLogger("Main");
+Logger mainLogger = CoreLogger.GetLogger("Main");
 
 AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
 {
@@ -15,16 +18,17 @@ AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
         .AppendLine($"启动于 {LaunchTime:yyyy-MM-dd HH:mm:ss.ffff}")
         .AppendLine($"崩溃于 {now:yyyy-MM-dd HH:mm:ss.ffff}")
         .Append($"工作时长 {now - LaunchTime}");
-    logger.Fatal(args.ExceptionObject as Exception, sb.ToString());
+    mainLogger.Fatal(args.ExceptionObject as Exception, sb.ToString());
 };
 
 var currentProcess = Process.GetCurrentProcess();
 _ = new Mutex(true, currentProcess.ProcessName, out var isFirst);
 if (isFirst)
 {
-    logger.Info("程序启动");
-    await Task.CompletedTask; // TODO: repalce for program logic
-    logger.Info("程序结束");
+    mainLogger.Info("程序启动");
+    await BeginService();
+    mainLogger.Info("程序结束");
+    CoreLogger.Flush();
 }
 else
 {
@@ -38,4 +42,20 @@ if (!Console.IsInputRedirected)
 else
 {
     Console.WriteLine("程序主逻辑已结束");
+}
+
+static async Task BeginService()
+{
+    var hb = Host.CreateDefaultBuilder()
+        .ConfigureLogging(builder =>
+        {
+            //Remove default logging
+            builder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.None);
+            builder.AddNLog();
+        })
+        .ConfigureServices((context, service) =>
+        {
+            //TODO: Add services here
+        });
+    await hb.RunConsoleAsync();
 }

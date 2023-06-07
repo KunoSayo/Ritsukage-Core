@@ -21,8 +21,14 @@ namespace RUCore.Common.Logging
         /// Gets the specified named logger.
         /// </summary>
         /// <param name="name">name of Logger</param>
-        /// <returns></returns>
+        /// <returns>Specified named logger</returns>
         public static Logger GetLogger(string name)
             => Builder.GetLogger(name);
+
+        /// <summary>
+        /// Flush any pending log messages (in case of asynchronous targets) with the default timeout of 15 seconds.
+        /// </summary>
+        public static void Flush()
+            => LogManager.Flush();
     }
 }
