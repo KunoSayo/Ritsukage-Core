@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Extensions.Logging;
@@ -26,7 +28,7 @@ _ = new Mutex(true, currentProcess.ProcessName, out var isFirst);
 if (isFirst)
 {
     mainLogger.Info("程序启动");
-    await BeginService();
+    await BeginService().ConfigureAwait(false);
     mainLogger.Info("程序结束");
     CoreLogger.Flush();
 }
@@ -45,7 +47,7 @@ else
     Console.WriteLine("程序主逻辑已结束");
 }
 
-static async Task BeginService()
+static Task BeginService()
 {
     var hb = Host.CreateDefaultBuilder()
                  .ConfigureLogging(builder =>
@@ -56,7 +58,15 @@ static async Task BeginService()
                   })
                  .ConfigureServices((context, service) =>
                   {
+                      //Need to register basic services here
+                      //Including database services, etc.
+                      /*
+                      service.AddDbContext<DbContext>(dbContextOptionsBuilder =>
+                      {
+                          dbContextOptionsBuilder.UseSqlite($"Data Source=data.db");
+                      });
+                      */
                       //TODO: Add services here
                   });
-    await hb.RunConsoleAsync();
+    return hb.RunConsoleAsync();
 }
