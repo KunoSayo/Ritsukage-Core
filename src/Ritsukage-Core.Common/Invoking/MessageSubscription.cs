@@ -130,8 +130,8 @@ namespace RUCore.Common.Invoking
                      handlerNode = handlerNode.Next)
                 {
                     IMessageHandler handler = handlerNode.Value;
-                    if (handler is IContravarianceMessageHandler<TClient, TMessage> or
-                                   IInvarianceMessageHandler<TClient, TMessage>)
+                    if (handler is IContravariantMessageHandler<TClient, TMessage> or
+                                   IInvariantMessageHandler<TClient, TMessage>)
                     {
                         filtered.Add(handler);
                         handlers.Remove(handlerNode);
