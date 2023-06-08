@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using RUCore.Common.Attributes;
-using RUCore.Common.Invoking;
 
 namespace RUCore.Common.Invoking.Attributes
 {
@@ -15,23 +14,28 @@ namespace RUCore.Common.Invoking.Attributes
         /// </summary>
         /// <param name="implementationType"></param>
         public RegisterMessageSubscriptionAttribute(Type implementationType) : this(null, implementationType)
-        { }
+        {
+        }
 
         /// <summary>
         /// Register a message subscription
         /// </summary>
         /// <param name="implementationType"></param>
         /// <param name="lifetime"></param>
-        public RegisterMessageSubscriptionAttribute(Type implementationType, ServiceLifetime? lifetime) : this(null, implementationType, lifetime)
-        { }
+        public RegisterMessageSubscriptionAttribute(Type implementationType, ServiceLifetime? lifetime) : this(
+            null, implementationType, lifetime)
+        {
+        }
 
         /// <summary>
         /// Register a message subscription
         /// </summary>
         /// <param name="serviceType"></param>
         /// <param name="implementationType"></param>
-        public RegisterMessageSubscriptionAttribute(Type? serviceType, Type implementationType) : this(serviceType, implementationType, null)
-        { }
+        public RegisterMessageSubscriptionAttribute(Type? serviceType, Type implementationType) : this(
+            serviceType, implementationType, null)
+        {
+        }
 
         /// <summary>
         /// Register a message subscription
@@ -39,8 +43,11 @@ namespace RUCore.Common.Invoking.Attributes
         /// <param name="serviceType"></param>
         /// <param name="implementationType"></param>
         /// <param name="lifetime"></param>
-        public RegisterMessageSubscriptionAttribute(Type? serviceType, Type implementationType, ServiceLifetime? lifetime) : base(serviceType, implementationType, lifetime)
-        { }
+        public RegisterMessageSubscriptionAttribute(Type?            serviceType, Type implementationType,
+                                                    ServiceLifetime? lifetime) : base(
+            serviceType, implementationType, lifetime)
+        {
+        }
 
         /// <summary>
         /// Get service type
@@ -48,6 +55,8 @@ namespace RUCore.Common.Invoking.Attributes
         /// <param name="implementationType"></param>
         /// <returns></returns>
         protected override Type GetServiceType(Type implementationType)
-            => typeof(IMessageSubscription);
+        {
+            return typeof(IMessageSubscription);
+        }
     }
 }

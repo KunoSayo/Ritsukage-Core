@@ -34,21 +34,24 @@ namespace RUCore.Common.Invoking
             /// <summary>
             /// Lock used to protect access to the registrations.
             /// </summary>
-            readonly UInt32Lock _lock;
+            private readonly UInt32Lock _lock;
 
             /// <summary>
             /// Returns the number of registrations.
             /// </summary>
             /// <param name="source"></param>
-            public Registrations(MessageSubscription source) => Source = source;
+            public Registrations(MessageSubscription source)
+            {
+                Source = source;
+            }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            void Recycle(RegistrationNode node)
+            private void Recycle(RegistrationNode node)
             {
-                node.Id = 0;
+                node.Id      = 0;
                 node.Handler = null;
-                node.Prev = null;
-                node.Next = FreeNodeList;
+                node.Prev    = null;
+                node.Next    = FreeNodeList;
                 FreeNodeList = node;
             }
 
@@ -68,10 +71,10 @@ namespace RUCore.Common.Invoking
                         node = FreeNodeList;
                         if (node != null)
                         {
-                            FreeNodeList = node.Next;
-                            node.Id = NextAvailableId++;
-                            node.Handler = handler;
-                            node.Next = EffictiveNodeList;
+                            FreeNodeList      = node.Next;
+                            node.Id           = NextAvailableId++;
+                            node.Handler      = handler;
+                            node.Next         = EffictiveNodeList;
                             EffictiveNodeList = node;
                             if (node.Next != null)
                                 node.Next.Prev = node;
@@ -82,6 +85,7 @@ namespace RUCore.Common.Invoking
                         ExitLock();
                     }
                 }
+
                 if (node == null)
                 {
                     node = new RegistrationNode(this)
@@ -91,7 +95,7 @@ namespace RUCore.Common.Invoking
                     EnterLock();
                     try
                     {
-                        node.Id = NextAvailableId++;
+                        node.Id   = NextAvailableId++;
                         node.Next = EffictiveNodeList;
                         if (node.Next != null)
                             node.Next.Prev = node;
@@ -102,6 +106,7 @@ namespace RUCore.Common.Invoking
                         ExitLock();
                     }
                 }
+
                 return node;
             }
 
@@ -162,13 +167,17 @@ namespace RUCore.Common.Invoking
             /// Enters the lock protecting access to the registrations.
             /// </summary>
             public void EnterLock()
-                => _lock.EnterWriteLock();
+            {
+                _lock.EnterWriteLock();
+            }
 
             /// <summary>
             /// Exits the lock protecting access to the registrations.
             /// </summary>
             public void ExitLock()
-                => _lock.ExitWriteLock();
+            {
+                _lock.ExitWriteLock();
+            }
         }
     }
 }

@@ -11,22 +11,23 @@ namespace RUCore.Common.Invoking
     /// Message handler invoker.
     /// </summary>
     /// <typeparam name="TClientService"></typeparam>
-    public abstract class MessageHandlerInvoker<TClientService> : IMessageHandlerInvoker<TClientService> where TClientService : IMessageClient
+    public abstract class MessageHandlerInvoker<TClientService> : IMessageHandlerInvoker<TClientService>
+        where TClientService : IMessageClient
     {
         /// <summary>
         /// Services.
         /// </summary>
-        protected readonly IServiceProvider _Services;
+        protected readonly IServiceProvider Services;
 
         /// <summary>
         /// Logger.
         /// </summary>
-        protected readonly ILogger<MessageHandlerInvoker<TClientService>> _Logger;
+        protected readonly ILogger<MessageHandlerInvoker<TClientService>> Logger;
 
         /// <summary>
         /// Subscription resolver.
         /// </summary>
-        protected readonly IMessageSubscriptionResolver<TClientService, IMessageSubscription> _subscriptionResolver;
+        protected readonly IMessageSubscriptionResolver<TClientService, IMessageSubscription> SubscriptionResolver;
 
         /// <summary>
         /// Message handler invoker.
@@ -34,15 +35,16 @@ namespace RUCore.Common.Invoking
         /// <param name="services"></param>
         /// <param name="logger"></param>
         /// <param name="subscriptionResolver"></param>
-        protected MessageHandlerInvoker(IServiceProvider services,
+        protected MessageHandlerInvoker(IServiceProvider                               services,
                                         ILogger<MessageHandlerInvoker<TClientService>> logger,
-                                        IMessageSubscriptionResolver<TClientService, IMessageSubscription> subscriptionResolver)
+                                        IMessageSubscriptionResolver<TClientService, IMessageSubscription>
+                                            subscriptionResolver)
         {
-            _Services = services;
-            _Logger = logger;
-            _subscriptionResolver = subscriptionResolver;
+            Services             = services;
+            Logger               = logger;
+            SubscriptionResolver = subscriptionResolver;
         }
-        
+
         /// <summary>
         /// Try to resolve subscription for the message type.
         /// </summary>
@@ -50,11 +52,12 @@ namespace RUCore.Common.Invoking
         /// <param name="client"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public virtual Task HandleMessageAsync<TMessage>(TClientService client, TMessage message) where TMessage : IMessage
+        public virtual Task HandleMessageAsync<TMessage>(TClientService client, TMessage message)
+            where TMessage : IMessage
         {
-            if (TryResolveSubscription(out IMessageSubscription<TClientService, TMessage>? subscription))
-                return subscription!.HandleMessageAsync(client, message);
-            return Task.CompletedTask;
+            return TryResolveSubscription(out IMessageSubscription<TClientService, TMessage>? subscription)
+                ? subscription!.HandleMessageAsync(client, message)
+                : Task.CompletedTask;
         }
 
         /// <summary>
@@ -63,10 +66,13 @@ namespace RUCore.Common.Invoking
         /// <typeparam name="TMessage"></typeparam>
         /// <param name="subscription"></param>
         /// <returns></returns>
-        protected virtual bool TryResolveSubscription<TMessage>([NotNullWhen(true)] out IMessageSubscription<TClientService, TMessage>? subscription) where TMessage : IMessage
+        protected virtual bool TryResolveSubscription<TMessage>(
+            [NotNullWhen(true)] out IMessageSubscription<TClientService, TMessage>? subscription)
+            where TMessage : IMessage
         {
             Unsafe.SkipInit(out subscription);
-            ref IMessageSubscription? s = ref Unsafe.As<IMessageSubscription<TClientService, TMessage>?, IMessageSubscription?>(ref subscription);
+            ref IMessageSubscription? s =
+                ref Unsafe.As<IMessageSubscription<TClientService, TMessage>?, IMessageSubscription?>(ref subscription);
             return TryResolveSubscription(typeof(TMessage), out s);
         }
 
@@ -76,31 +82,37 @@ namespace RUCore.Common.Invoking
         /// <param name="messageType"></param>
         /// <param name="subscription"></param>
         /// <returns></returns>
-        protected virtual bool TryResolveSubscription(Type messageType, [NotNullWhen(true)] out IMessageSubscription? subscription)
-            => (subscription = _subscriptionResolver.ResolveByMessage(messageType)) != null;
+        protected virtual bool TryResolveSubscription(Type                                          messageType,
+                                                      [NotNullWhen(true)] out IMessageSubscription? subscription)
+        {
+            return (subscription = SubscriptionResolver.ResolveByMessage(messageType)) != null;
+        }
     }
 
     /// <summary>
     /// Message handler invoker.
     /// </summary>
     /// <typeparam name="TClientService"></typeparam>
-    /// <typeparam name="TRawdata"></typeparam>
-    public abstract class MessageHandlerInvoker<TClientService, TRawdata> : MessageHandlerInvoker<TClientService>, IMessageHandlerInvoker<TClientService, TRawdata> where TClientService : IMessageClient
+    /// <typeparam name="TRawData"></typeparam>
+    public abstract class MessageHandlerInvoker<TClientService, TRawData> : MessageHandlerInvoker<TClientService>,
+                                                                            IMessageHandlerInvoker<TClientService,
+                                                                                TRawData>
+        where TClientService : IMessageClient
     {
         /// <summary>
         /// Subscription mapping.
         /// </summary>
-        protected readonly ConcurrentDictionary<Type, Type> _SubscriptionMapping = new();
+        protected readonly ConcurrentDictionary<Type, Type> SubscriptionMapping = new();
 
         /// <summary>
         /// Parser resolver.
         /// </summary>
-        protected readonly IMessageParserResolver<TRawdata, IMessageParser<TRawdata>> _parserResolver;
+        protected readonly IMessageParserResolver<TRawData, IMessageParser<TRawData>> InnerParserResolver;
 
         /// <summary>
         /// Parser resolver.
         /// </summary>
-        protected virtual IMessageParserResolver<TRawdata, IMessageParser<TRawdata>> ParserResolver => _parserResolver;
+        protected virtual IMessageParserResolver<TRawData, IMessageParser<TRawData>> ParserResolver => InnerParserResolver;
 
         /// <summary>
         /// Message handler invoker.
@@ -109,29 +121,31 @@ namespace RUCore.Common.Invoking
         /// <param name="logger"></param>
         /// <param name="subscriptionResolver"></param>
         /// <param name="parserResolver"></param>
-        protected MessageHandlerInvoker(IServiceProvider services,
-                                        ILogger<MessageHandlerInvoker<TClientService, TRawdata>> logger,
-                                        IMessageSubscriptionResolver<TClientService, IMessageSubscription> subscriptionResolver,
-                                        IMessageParserResolver<TRawdata, IMessageParser<TRawdata>> parserResolver) : base(services, logger, subscriptionResolver)
+        protected MessageHandlerInvoker(IServiceProvider                                         services,
+                                        ILogger<MessageHandlerInvoker<TClientService, TRawData>> logger,
+                                        IMessageSubscriptionResolver<TClientService, IMessageSubscription>
+                                            subscriptionResolver,
+                                        IMessageParserResolver<TRawData, IMessageParser<TRawData>> parserResolver) :
+            base(services, logger, subscriptionResolver)
         {
-            _parserResolver = parserResolver;
+            InnerParserResolver = parserResolver;
         }
 
         /// <summary>
-        /// Handle rawdata.
+        /// Handle raw data.
         /// </summary>
         /// <param name="client"></param>
-        /// <param name="rawdata"></param>
+        /// <param name="rawData"></param>
         /// <returns></returns>
-        public virtual async Task HandleRawdataAsync(TClientService client, TRawdata rawdata)
+        public virtual async Task HandleRawDataAsync(TClientService client, TRawData rawData)
         {
-            if (TryResolveParsers(in rawdata, out var parsers))
+            if (TryResolveParsers(in rawData, out var parsers))
             {
                 foreach (var parser in parsers!)
                 {
-                    if (parser.CanParse(in rawdata))
+                    if (parser.CanParse(in rawData))
                     {
-                        IMessage<TRawdata> message = parser.Parse(in rawdata);
+                        IMessage<TRawData> message = parser.Parse(in rawData);
                         if (TryResolveSubscription(parser.MessageType, out IMessageSubscription? subscription))
                         {
                             await subscription!.HandleMessageAsync(client, message).ConfigureAwait(false);
@@ -142,14 +156,15 @@ namespace RUCore.Common.Invoking
         }
 
         /// <summary>
-        /// Try to resolve parsers for the rawdata.
+        /// Try to resolve parsers for the raw data.
         /// </summary>
-        /// <param name="rawdata"></param>
+        /// <param name="rawData"></param>
         /// <param name="parsers"></param>
         /// <returns></returns>
-        protected virtual bool TryResolveParsers(in TRawdata rawdata, [NotNullWhen(true)] out IEnumerable<IMessageParser<TRawdata>>? parsers)
+        protected virtual bool TryResolveParsers(in                      TRawData                               rawData,
+                                                 [NotNullWhen(true)] out IEnumerable<IMessageParser<TRawData>>? parsers)
         {
-            parsers = ParserResolver.ResolveParsers(in rawdata);
+            parsers = ParserResolver.ResolveParsers(in rawData);
             return parsers != null;
         }
     }

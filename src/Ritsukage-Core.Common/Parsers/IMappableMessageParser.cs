@@ -18,9 +18,11 @@ namespace RUCore.Common.Parsers
     /// Message parser
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
-    /// <typeparam name="TRawdata"></typeparam>
+    /// <typeparam name="TRawData"></typeparam>
     /// <typeparam name="TMessage"></typeparam>
-    public interface IMappableMessageParser<TKey, TRawdata, TMessage> : IMappableMessageParser<TKey>,
-                                                                        IMessageParser<TRawdata, TMessage> where TMessage : IMessage<TRawdata>
-    { }
+    public interface IMappableMessageParser<TKey, TRawData, TMessage> : IMappableMessageParser<TKey>,
+                                                                        IMessageParser<TRawData, TMessage>
+        where TMessage : IMessage<TRawData>
+    {
+    }
 }

@@ -7,17 +7,17 @@ using System.Diagnostics;
 using System.Text;
 
 Console.Title = "Ritsukage Core";
-DateTime LaunchTime = DateTime.Now;
-Logger mainLogger = CoreLogger.GetLogger("Main");
+DateTime launchTime = DateTime.Now;
+Logger   mainLogger = CoreLogger.GetLogger("Main");
 
 AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
 {
     var now = DateTime.Now;
     var sb = new StringBuilder()
-        .AppendLine("！！！程序发生未捕获异常，程序即将崩溃！！！")
-        .AppendLine($"启动于 {LaunchTime:yyyy-MM-dd HH:mm:ss.ffff}")
-        .AppendLine($"崩溃于 {now:yyyy-MM-dd HH:mm:ss.ffff}")
-        .Append($"工作时长 {now - LaunchTime}");
+            .AppendLine("！！！程序发生未捕获异常，程序即将崩溃！！！")
+            .AppendLine($"启动于 {launchTime:yyyy-MM-dd HH:mm:ss.ffff}")
+            .AppendLine($"崩溃于 {now:yyyy-MM-dd HH:mm:ss.ffff}")
+            .Append($"工作时长 {now - launchTime}");
     mainLogger.Fatal(args.ExceptionObject as Exception, sb.ToString());
 };
 
@@ -34,6 +34,7 @@ else
 {
     Console.WriteLine("请勿重复启动程序实例，以免发生异常");
 }
+
 if (!Console.IsInputRedirected)
 {
     Console.WriteLine("程序主逻辑已结束，按任意键结束程序");
@@ -47,15 +48,15 @@ else
 static async Task BeginService()
 {
     var hb = Host.CreateDefaultBuilder()
-        .ConfigureLogging(builder =>
-        {
-            //Remove default logging
-            builder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.None);
-            builder.AddNLog();
-        })
-        .ConfigureServices((context, service) =>
-        {
-            //TODO: Add services here
-        });
+                 .ConfigureLogging(builder =>
+                  {
+                      //Remove default logging
+                      builder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.None);
+                      builder.AddNLog();
+                  })
+                 .ConfigureServices((context, service) =>
+                  {
+                      //TODO: Add services here
+                  });
     await hb.RunConsoleAsync();
 }

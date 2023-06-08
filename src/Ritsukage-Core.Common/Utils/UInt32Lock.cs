@@ -7,11 +7,13 @@ namespace RUCore.Common.Utils
     /// </summary>
     public struct UInt32Lock
     {
-        uint _lock;
+        private uint _lock;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static uint CompareExchange(ref uint location1, uint value, uint comparand)
-            => Interlocked.CompareExchange(ref location1, value, comparand);
+        private static uint CompareExchange(ref uint location1, uint value, uint comparand)
+        {
+            return Interlocked.CompareExchange(ref location1, value, comparand);
+        }
 
         /// <summary>
         /// Enter write lock
@@ -22,15 +24,16 @@ namespace RUCore.Common.Utils
             do
             {
                 while ((lastLock = _lock) != 0) ;
-            }
-            while (CompareExchange(ref _lock, 0x80000000, lastLock) != lastLock);
+            } while (CompareExchange(ref _lock, 0x80000000, lastLock) != lastLock);
         }
 
         /// <summary>
         /// Exit write lock
         /// </summary>
         public void ExitWriteLock()
-            => Volatile.Write(ref _lock, 0u);
+        {
+            Volatile.Write(ref _lock, 0u);
+        }
 
         /// <summary>
         /// Enter read lock
@@ -42,8 +45,7 @@ namespace RUCore.Common.Utils
             {
                 while (((lastLock = _lock) >> 31) != 0) ;
                 currentLock = lastLock + 1;
-            }
-            while (CompareExchange(ref _lock, currentLock, lastLock) != lastLock);
+            } while (CompareExchange(ref _lock, currentLock, lastLock) != lastLock);
         }
 
         /// <summary>
@@ -55,8 +57,7 @@ namespace RUCore.Common.Utils
             do
             {
                 lastLock = _lock;
-            }
-            while (CompareExchange(ref _lock, lastLock - 1, lastLock) != lastLock);
+            } while (CompareExchange(ref _lock, lastLock - 1, lastLock) != lastLock);
         }
     }
 }

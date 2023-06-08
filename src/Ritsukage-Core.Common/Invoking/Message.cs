@@ -1,7 +1,6 @@
-﻿using RUCore.Common.Invoking;
-
-namespace RUCore.Common.Invoking
+﻿namespace RUCore.Common.Invoking
 {
+    
     /// <summary>
     /// Message
     /// </summary>
@@ -11,11 +10,13 @@ namespace RUCore.Common.Invoking
         public virtual bool Cancel { get; set; }
     }
 
-    /// <inheritdoc/>
-    /// <typeparam name="TRawdata"></typeparam>
-    public abstract class Message<TRawdata> : Message, IMessage<TRawdata>
+    /// <summary>
+    /// Message
+    /// </summary>
+    /// <typeparam name="TRawData"></typeparam>
+    public abstract class Message<TRawData> : Message, IMessage<TRawData>
     {
         /// <inheritdoc/>
-        public virtual TRawdata Rawdata { get; set; } = default!;
+        public virtual TRawData RawData { get; set; } = default!;
     }
 }

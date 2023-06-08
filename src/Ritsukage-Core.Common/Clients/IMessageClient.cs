@@ -4,5 +4,6 @@
     /// Message client interface
     /// </summary>
     public interface IMessageClient
-    { }
+    {
+    }
 }

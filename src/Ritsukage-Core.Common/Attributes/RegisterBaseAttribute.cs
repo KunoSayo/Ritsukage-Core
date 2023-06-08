@@ -27,15 +27,18 @@ namespace RUCore.Common.Attributes
         /// </summary>
         /// <param name="implementationType"></param>
         protected RegisterBaseAttribute(Type implementationType) : this(null, implementationType)
-        { }
+        {
+        }
 
         /// <summary>
         /// Register service
         /// </summary>
         /// <param name="implementationType"></param>
         /// <param name="lifetime"></param>
-        protected RegisterBaseAttribute(Type implementationType, ServiceLifetime? lifetime) : this(null, implementationType, lifetime)
-        { }
+        protected RegisterBaseAttribute(Type implementationType, ServiceLifetime? lifetime) : this(
+            null, implementationType, lifetime)
+        {
+        }
 
         /// <summary>
         /// Register service
@@ -44,7 +47,7 @@ namespace RUCore.Common.Attributes
         /// <param name="implementationType"></param>
         protected RegisterBaseAttribute(Type? serviceType, Type implementationType)
         {
-            ServiceType = serviceType ?? GetServiceType(implementationType);
+            ServiceType        = serviceType ?? GetServiceType(implementationType);
             ImplementationType = implementationType;
         }
 
@@ -54,7 +57,8 @@ namespace RUCore.Common.Attributes
         /// <param name="serviceType"></param>
         /// <param name="implementationType"></param>
         /// <param name="lifetime"></param>
-        protected RegisterBaseAttribute(Type? serviceType, Type implementationType, ServiceLifetime? lifetime) : this(serviceType, implementationType)
+        protected RegisterBaseAttribute(Type? serviceType, Type implementationType, ServiceLifetime? lifetime) : this(
+            serviceType, implementationType)
         {
             Lifetime = lifetime;
         }

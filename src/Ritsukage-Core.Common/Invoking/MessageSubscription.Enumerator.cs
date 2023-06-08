@@ -10,13 +10,10 @@ namespace RUCore.Common.Invoking
         /// </summary>
         public struct Enumerator : IEnumerator<IMessageHandler>
         {
-            readonly MessageSubscription _subscription;
-
-            IMessageHandler? _current;
-
-            int _staticIdx;
-
-            RegistrationNode? _dynamicNode;
+            private readonly MessageSubscription _subscription;
+            private          IMessageHandler?    _current;
+            private          int                 _staticIdx;
+            private          RegistrationNode?   _dynamicNode;
 
             /// <summary>
             /// Enumerates the handlers of the subscription.
@@ -25,9 +22,9 @@ namespace RUCore.Common.Invoking
             public Enumerator(MessageSubscription subscription)
             {
                 _subscription = subscription;
-                _current = null;
-                _staticIdx = 0;
-                _dynamicNode = subscription._registrations?.EffictiveNodeList;
+                _current      = null;
+                _staticIdx    = 0;
+                _dynamicNode  = subscription._registrations?.EffictiveNodeList;
             }
 
             /// <summary>
@@ -51,12 +48,14 @@ namespace RUCore.Common.Invoking
                     _current = _subscription.StaticHandlers[_staticIdx++];
                     return true;
                 }
+
                 if (_dynamicNode != null)
                 {
-                    _current = _dynamicNode.Handler;
+                    _current     = _dynamicNode.Handler;
                     _dynamicNode = _dynamicNode.Next;
                     return _current != null;
                 }
+
                 return false;
             }
 
@@ -65,8 +64,8 @@ namespace RUCore.Common.Invoking
             /// </summary>
             public void Reset()
             {
-                _current = null;
-                _staticIdx = 0;
+                _current     = null;
+                _staticIdx   = 0;
                 _dynamicNode = _subscription._registrations?.EffictiveNodeList;
             }
 
@@ -74,7 +73,8 @@ namespace RUCore.Common.Invoking
             /// Does nothing.
             /// </summary>
             public readonly void Dispose()
-            { }
+            {
+            }
         }
     }
 }

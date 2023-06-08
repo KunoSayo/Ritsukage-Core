@@ -19,19 +19,19 @@ namespace RUCore.Common.Invoking
     }
 
     /// <summary>
-    /// Handler invoker with rawdata
+    /// Handler invoker with raw data
     /// </summary>
     /// <typeparam name="TClientService"></typeparam>
-    /// <typeparam name="TRawdata"></typeparam>
-    public interface IMessageHandlerInvoker<in TClientService, TRawdata> : IMessageHandlerInvoker<TClientService> where TClientService : IMessageClient
+    /// <typeparam name="TRawData"></typeparam>
+    public interface IMessageHandlerInvoker<in TClientService, TRawData> : IMessageHandlerInvoker<TClientService>
+        where TClientService : IMessageClient
     {
         /// <summary>
-        /// Handle rawdata
+        /// Handle raw data
         /// </summary>
         /// <param name="client"></param>
-        /// <param name="rawdata"></param>
+        /// <param name="rawData"></param>
         /// <returns></returns>
-        Task HandleRawdataAsync(TClientService client, TRawdata rawdata);
+        Task HandleRawDataAsync(TClientService client, TRawData rawData);
     }
-
 }

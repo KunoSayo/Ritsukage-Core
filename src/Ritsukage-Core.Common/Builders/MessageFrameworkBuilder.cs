@@ -17,7 +17,9 @@ namespace RUCore.Common.Builders
     /// <typeparam name="TInvokerService"></typeparam>
     /// <typeparam name="TClientService"></typeparam>
     /// <typeparam name="THandlerService"></typeparam>
-    public abstract class MessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> : IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService>
+    public abstract class
+        MessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> : IMessageFrameworkBuilder<
+            TInvokerService, TClientService, THandlerService>
         where TInvokerService : class, IMessageHandlerInvoker<TClientService>
         where TClientService : class, IMessageClient
         where THandlerService : class, IMessageHandler
@@ -70,7 +72,8 @@ namespace RUCore.Common.Builders
         /// <param name="lifetime"></param>
         /// <param name="addedDescriptor"></param>
         /// <returns></returns>
-        protected bool TryAddService(Type serviceType, Type implementationType, ServiceLifetime lifetime, [NotNullWhen(true)] out ServiceDescriptor? addedDescriptor)
+        protected bool TryAddService(Type serviceType, Type implementationType, ServiceLifetime lifetime,
+                                     [NotNullWhen(true)] out ServiceDescriptor? addedDescriptor)
         {
             ServiceDescriptor descriptor = new(serviceType, implementationType, lifetime);
             return TryAddService(descriptor, out addedDescriptor);
@@ -83,7 +86,8 @@ namespace RUCore.Common.Builders
         /// <param name="implementationInstance"></param>
         /// <param name="addedDescriptor"></param>
         /// <returns></returns>
-        protected bool TryAddService(Type serviceType, object implementationInstance, [NotNullWhen(true)] out ServiceDescriptor? addedDescriptor)
+        protected bool TryAddService(Type serviceType, object implementationInstance,
+                                     [NotNullWhen(true)] out ServiceDescriptor? addedDescriptor)
         {
             ServiceDescriptor descriptor = new(serviceType, implementationInstance);
             return TryAddService(descriptor, out addedDescriptor);
@@ -97,7 +101,8 @@ namespace RUCore.Common.Builders
         /// <param name="lifetime"></param>
         /// <param name="addedDescriptor"></param>
         /// <returns></returns>
-        protected bool TryAddService(Type serviceType, Func<IServiceProvider, object> factory, ServiceLifetime lifetime, [NotNullWhen(true)] out ServiceDescriptor? addedDescriptor)
+        protected bool TryAddService(Type serviceType, Func<IServiceProvider, object> factory, ServiceLifetime lifetime,
+                                     [NotNullWhen(true)] out ServiceDescriptor? addedDescriptor)
         {
             ServiceDescriptor descriptor = new(serviceType, factory, lifetime);
             return TryAddService(descriptor, out addedDescriptor);
@@ -109,7 +114,8 @@ namespace RUCore.Common.Builders
         /// <param name="descriptor"></param>
         /// <param name="addedDescriptor"></param>
         /// <returns></returns>
-        protected bool TryAddService(ServiceDescriptor descriptor, [NotNullWhen(true)] out ServiceDescriptor? addedDescriptor)
+        protected bool TryAddService(ServiceDescriptor                          descriptor,
+                                     [NotNullWhen(true)] out ServiceDescriptor? addedDescriptor)
         {
             int count = Services.Count;
             Services.TryAddEnumerable(descriptor);
@@ -118,6 +124,7 @@ namespace RUCore.Common.Builders
                 addedDescriptor = descriptor;
                 return true;
             }
+
             addedDescriptor = null;
             return false;
         }
@@ -127,8 +134,11 @@ namespace RUCore.Common.Builders
         /// </summary>
         /// <typeparam name="THandler"></typeparam>
         /// <returns></returns>
-        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddHandler<THandler>() where THandler : class, THandlerService
-            => AddHandler<THandler>(DefaultHandlerLifetime);
+        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddHandler<THandler>()
+            where THandler : class, THandlerService
+        {
+            return AddHandler<THandler>(DefaultHandlerLifetime);
+        }
 
         /// <summary>
         /// Adds a message handler.
@@ -136,7 +146,8 @@ namespace RUCore.Common.Builders
         /// <typeparam name="THandler"></typeparam>
         /// <param name="lifetime"></param>
         /// <returns></returns>
-        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddHandler<THandler>(ServiceLifetime lifetime) where THandler : class, THandlerService
+        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService>
+            AddHandler<THandler>(ServiceLifetime lifetime) where THandler : class, THandlerService
         {
             TryAddService(typeof(THandlerService), typeof(THandler), lifetime, out _);
             return this;
@@ -147,7 +158,8 @@ namespace RUCore.Common.Builders
         /// </summary>
         /// <param name="handlerInstance"></param>
         /// <returns></returns>
-        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddHandler(THandlerService handlerInstance)
+        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddHandler(
+            THandlerService handlerInstance)
         {
             TryAddService(typeof(THandlerService), handlerInstance, out _);
             return this;
@@ -159,8 +171,11 @@ namespace RUCore.Common.Builders
         /// <typeparam name="THandler"></typeparam>
         /// <param name="factory"></param>
         /// <returns></returns>
-        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddHandler<THandler>(Func<IServiceProvider, THandler> factory) where THandler : class, THandlerService
-            => AddHandler(factory, DefaultHandlerLifetime);
+        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddHandler<THandler>(
+            Func<IServiceProvider, THandler> factory) where THandler : class, THandlerService
+        {
+            return AddHandler(factory, DefaultHandlerLifetime);
+        }
 
         /// <summary>
         /// Adds a message handler.
@@ -169,7 +184,8 @@ namespace RUCore.Common.Builders
         /// <param name="factory"></param>
         /// <param name="lifetime"></param>
         /// <returns></returns>
-        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddHandler<THandler>(Func<IServiceProvider, THandler> factory, ServiceLifetime lifetime) where THandler : class, THandlerService
+        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddHandler<THandler>(
+            Func<IServiceProvider, THandler> factory, ServiceLifetime lifetime) where THandler : class, THandlerService
         {
             TryAddService(typeof(THandlerService), factory, lifetime, out _);
             return this;
@@ -180,8 +196,11 @@ namespace RUCore.Common.Builders
         /// </summary>
         /// <typeparam name="TInvoker"></typeparam>
         /// <returns></returns>
-        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddInvoker<TInvoker>() where TInvoker : class, TInvokerService
-            => AddInvoker<TInvoker>(DefaultInvokerLifetime);
+        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddInvoker<TInvoker>()
+            where TInvoker : class, TInvokerService
+        {
+            return AddInvoker<TInvoker>(DefaultInvokerLifetime);
+        }
 
         /// <summary>
         /// Adds a message invoker.
@@ -189,7 +208,8 @@ namespace RUCore.Common.Builders
         /// <typeparam name="TInvoker"></typeparam>
         /// <param name="lifetime"></param>
         /// <returns></returns>
-        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddInvoker<TInvoker>(ServiceLifetime lifetime) where TInvoker : class, TInvokerService
+        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService>
+            AddInvoker<TInvoker>(ServiceLifetime lifetime) where TInvoker : class, TInvokerService
         {
             Type invokerType = typeof(TInvoker);
             TryAddService(typeof(TInvokerService), invokerType, lifetime, out _);
@@ -203,7 +223,8 @@ namespace RUCore.Common.Builders
         /// </summary>
         /// <param name="invokerInstance"></param>
         /// <returns></returns>
-        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddInvoker(TInvokerService invokerInstance)
+        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddInvoker(
+            TInvokerService invokerInstance)
         {
             Type instanceType = typeof(TInvokerService);
             TryAddService(typeof(TInvokerService), invokerInstance, out _);
@@ -218,8 +239,11 @@ namespace RUCore.Common.Builders
         /// <typeparam name="TInvoker"></typeparam>
         /// <param name="factory"></param>
         /// <returns></returns>
-        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddInvoker<TInvoker>(Func<IServiceProvider, TInvoker> factory) where TInvoker : class, TInvokerService
-            => AddInvoker(factory, DefaultInvokerLifetime);
+        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddInvoker<TInvoker>(
+            Func<IServiceProvider, TInvoker> factory) where TInvoker : class, TInvokerService
+        {
+            return AddInvoker(factory, DefaultInvokerLifetime);
+        }
 
         /// <summary>
         /// Adds a message invoker.
@@ -228,7 +252,8 @@ namespace RUCore.Common.Builders
         /// <param name="factory"></param>
         /// <param name="lifetime"></param>
         /// <returns></returns>
-        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddInvoker<TInvoker>(Func<IServiceProvider, TInvoker> factory, ServiceLifetime lifetime) where TInvoker : class, TInvokerService
+        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddInvoker<TInvoker>(
+            Func<IServiceProvider, TInvoker> factory, ServiceLifetime lifetime) where TInvoker : class, TInvokerService
         {
             Type invokerType = typeof(TInvokerService);
             TryAddService(invokerType, factory, lifetime, out _);
@@ -242,8 +267,11 @@ namespace RUCore.Common.Builders
         /// </summary>
         /// <typeparam name="TClient"></typeparam>
         /// <returns></returns>
-        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddClient<TClient>() where TClient : class, TClientService
-            => AddClient<TClient>(DefaultClientLifetime);
+        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddClient<TClient>()
+            where TClient : class, TClientService
+        {
+            return AddClient<TClient>(DefaultClientLifetime);
+        }
 
         /// <summary>
         /// Adds a message client.
@@ -251,7 +279,8 @@ namespace RUCore.Common.Builders
         /// <typeparam name="TClient"></typeparam>
         /// <param name="lifetime"></param>
         /// <returns></returns>
-        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddClient<TClient>(ServiceLifetime lifetime) where TClient : class, TClientService
+        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService>
+            AddClient<TClient>(ServiceLifetime lifetime) where TClient : class, TClientService
         {
             TryAddService(typeof(TClientService), typeof(TClient), lifetime, out _);
             return this;
@@ -262,7 +291,8 @@ namespace RUCore.Common.Builders
         /// </summary>
         /// <param name="clientInstance"></param>
         /// <returns></returns>
-        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddClient(TClientService clientInstance)
+        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddClient(
+            TClientService clientInstance)
         {
             TryAddService(typeof(TClientService), clientInstance, out _);
             return this;
@@ -274,8 +304,11 @@ namespace RUCore.Common.Builders
         /// <typeparam name="TClient"></typeparam>
         /// <param name="factory"></param>
         /// <returns></returns>
-        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddClient<TClient>(Func<IServiceProvider, TClient> factory) where TClient : class, TClientService
-            => AddClient(factory, DefaultClientLifetime);
+        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddClient<TClient>(
+            Func<IServiceProvider, TClient> factory) where TClient : class, TClientService
+        {
+            return AddClient(factory, DefaultClientLifetime);
+        }
 
         /// <summary>
         /// Adds a message client.
@@ -284,7 +317,8 @@ namespace RUCore.Common.Builders
         /// <param name="factory"></param>
         /// <param name="lifetime"></param>
         /// <returns></returns>
-        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddClient<TClient>(Func<IServiceProvider, TClient> factory, ServiceLifetime lifetime) where TClient : class, TClientService
+        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddClient<TClient>(
+            Func<IServiceProvider, TClient> factory, ServiceLifetime lifetime) where TClient : class, TClientService
         {
             TryAddService(typeof(TClientService), factory, lifetime, out _);
             return this;
@@ -297,9 +331,11 @@ namespace RUCore.Common.Builders
         /// <param name="lifetime"></param>
         protected virtual void ResolveMessageSubscription(Type invokerType, ServiceLifetime? lifetime)
         {
-            IEnumerable<RegisterMessageSubscriptionAttribute> attributes = invokerType.GetCustomAttributes<RegisterMessageSubscriptionAttribute>(false);
+            IEnumerable<RegisterMessageSubscriptionAttribute> attributes =
+                invokerType.GetCustomAttributes<RegisterMessageSubscriptionAttribute>(false);
             foreach (RegisterMessageSubscriptionAttribute attribute in attributes)
-                Services.Add(new ServiceDescriptor(attribute.ServiceType, attribute.ImplementationType, lifetime ?? attribute.Lifetime ?? DefaultSubscriptionLifetime));
+                Services.Add(new ServiceDescriptor(attribute.ServiceType, attribute.ImplementationType,
+                                                   lifetime ?? attribute.Lifetime ?? DefaultSubscriptionLifetime));
         }
 
         /// <summary>
@@ -309,9 +345,12 @@ namespace RUCore.Common.Builders
         /// <param name="lifetime"></param>
         protected virtual void ResolveMessageSubscriptionResolver(Type invokerType, ServiceLifetime? lifetime)
         {
-            IEnumerable<RegisterMessageSubscriptionResolverAttribute> attributes = invokerType.GetCustomAttributes<RegisterMessageSubscriptionResolverAttribute>(false);
+            IEnumerable<RegisterMessageSubscriptionResolverAttribute> attributes =
+                invokerType.GetCustomAttributes<RegisterMessageSubscriptionResolverAttribute>(false);
             foreach (RegisterMessageSubscriptionResolverAttribute attribute in attributes)
-                Services.Add(new ServiceDescriptor(attribute.ServiceType, attribute.ImplementationType, lifetime ?? attribute.Lifetime ?? DefaultSubscriptionResolverLifetime));
+                Services.Add(new ServiceDescriptor(attribute.ServiceType, attribute.ImplementationType,
+                                                   lifetime ?? attribute.Lifetime ??
+                                                   DefaultSubscriptionResolverLifetime));
         }
 
         /// <summary>
@@ -319,7 +358,8 @@ namespace RUCore.Common.Builders
         /// </summary>
         /// <param name="addedDescriptors"></param>
         /// <param name="lifetime"></param>
-        protected virtual void ReplaceServiceLifetime(ICollection<ServiceDescriptor> addedDescriptors, ServiceLifetime lifetime)
+        protected virtual void ReplaceServiceLifetime(ICollection<ServiceDescriptor> addedDescriptors,
+                                                      ServiceLifetime                lifetime)
         {
             for (int i = Services.Count - 1; i >= 0; i--)
             {
@@ -328,10 +368,9 @@ namespace RUCore.Common.Builders
                 {
                     Services.RemoveAt(i);
                     addedDescriptors.Remove(descriptor);
-                    if (descriptor.ImplementationFactory != null)
-                        descriptor = new ServiceDescriptor(descriptor.ServiceType, descriptor.ImplementationFactory, lifetime);
-                    else
-                        descriptor = new ServiceDescriptor(descriptor.ServiceType, descriptor.ImplementationType!, lifetime);
+                    descriptor = descriptor.ImplementationFactory != null
+                        ? new ServiceDescriptor(descriptor.ServiceType, descriptor.ImplementationFactory, lifetime)
+                        : new ServiceDescriptor(descriptor.ServiceType, descriptor.ImplementationType!,   lifetime);
                     Services.Add(descriptor);
                     addedDescriptors.Add(descriptor);
                 }
@@ -346,7 +385,9 @@ namespace RUCore.Common.Builders
     /// <typeparam name="TClientService"></typeparam>
     /// <typeparam name="THandlerService"></typeparam>
     /// <typeparam name="TParserService"></typeparam>
-    public abstract class MessageFrameworkBuilder<TInvokerService, TClientService, THandlerService, TParserService> : MessageFrameworkBuilder<TInvokerService, TClientService, THandlerService>, IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService, TParserService>
+    public abstract class MessageFrameworkBuilder<TInvokerService, TClientService, THandlerService, TParserService> :
+        MessageFrameworkBuilder<TInvokerService, TClientService, THandlerService>,
+        IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService, TParserService>
         where TParserService : class, IMessageParser
         where THandlerService : class, IMessageHandler
         where TInvokerService : class, IMessageHandlerInvoker<TClientService>
@@ -391,8 +432,11 @@ namespace RUCore.Common.Builders
         /// </summary>
         /// <typeparam name="TParser"></typeparam>
         /// <returns></returns>
-        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService, TParserService> AddParser<TParser>() where TParser : class, TParserService
-            => AddParser<TParser>(DefaultParserLifetime);
+        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService, TParserService>
+            AddParser<TParser>() where TParser : class, TParserService
+        {
+            return AddParser<TParser>(DefaultParserLifetime);
+        }
 
         /// <summary>
         /// Adds a message parser.
@@ -400,7 +444,8 @@ namespace RUCore.Common.Builders
         /// <typeparam name="TParser"></typeparam>
         /// <param name="lifetime"></param>
         /// <returns></returns>
-        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService, TParserService> AddParser<TParser>(ServiceLifetime lifetime) where TParser : class, TParserService
+        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService, TParserService>
+            AddParser<TParser>(ServiceLifetime lifetime) where TParser : class, TParserService
         {
             TryAddService(typeof(TParserService), typeof(TParser), lifetime, out _);
             return this;
@@ -411,7 +456,8 @@ namespace RUCore.Common.Builders
         /// </summary>
         /// <param name="parserInstance"></param>
         /// <returns></returns>
-        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService, TParserService> AddParser(TParserService parserInstance)
+        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService, TParserService>
+            AddParser(TParserService parserInstance)
         {
             TryAddService(typeof(TParserService), parserInstance, out _);
             return this;
@@ -423,8 +469,11 @@ namespace RUCore.Common.Builders
         /// <typeparam name="TParser"></typeparam>
         /// <param name="factory"></param>
         /// <returns></returns>
-        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService, TParserService> AddParser<TParser>(Func<IServiceProvider, TParser> factory) where TParser : class, TParserService
-            => AddParser(factory, DefaultParserLifetime);
+        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService, TParserService>
+            AddParser<TParser>(Func<IServiceProvider, TParser> factory) where TParser : class, TParserService
+        {
+            return AddParser(factory, DefaultParserLifetime);
+        }
 
         /// <summary>
         /// Adds a message parser.
@@ -433,7 +482,9 @@ namespace RUCore.Common.Builders
         /// <param name="factory"></param>
         /// <param name="lifetime"></param>
         /// <returns></returns>
-        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService, TParserService> AddParser<TParser>(Func<IServiceProvider, TParser> factory, ServiceLifetime lifetime) where TParser : class, TParserService
+        public virtual IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService, TParserService>
+            AddParser<TParser>(Func<IServiceProvider, TParser> factory, ServiceLifetime lifetime)
+            where TParser : class, TParserService
         {
             TryAddService(typeof(TParserService), factory, lifetime, out _);
             return this;
@@ -445,7 +496,8 @@ namespace RUCore.Common.Builders
         /// <typeparam name="THandler"></typeparam>
         /// <param name="lifetime"></param>
         /// <returns></returns>
-        public override IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddHandler<THandler>(ServiceLifetime lifetime)
+        public override IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddHandler<THandler>(
+            ServiceLifetime lifetime)
         {
             base.AddHandler<THandler>(lifetime);
             ResolveMessageParser(typeof(THandler), lifetime);
@@ -457,7 +509,8 @@ namespace RUCore.Common.Builders
         /// </summary>
         /// <param name="handlerInstance"></param>
         /// <returns></returns>
-        public override IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddHandler(THandlerService handlerInstance)
+        public override IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddHandler(
+            THandlerService handlerInstance)
         {
             base.AddHandler(handlerInstance);
             ResolveMessageParser(handlerInstance.GetType(), ServiceLifetime.Singleton);
@@ -471,7 +524,8 @@ namespace RUCore.Common.Builders
         /// <param name="factory"></param>
         /// <param name="lifetime"></param>
         /// <returns></returns>
-        public override IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddHandler<THandler>(Func<IServiceProvider, THandler> factory, ServiceLifetime lifetime)
+        public override IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddHandler<THandler>(
+            Func<IServiceProvider, THandler> factory, ServiceLifetime lifetime)
         {
             base.AddHandler(factory, lifetime);
             ResolveMessageParser(typeof(THandler), lifetime);
@@ -484,7 +538,8 @@ namespace RUCore.Common.Builders
         /// <typeparam name="TInvoker"></typeparam>
         /// <param name="lifetime"></param>
         /// <returns></returns>
-        public override IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddInvoker<TInvoker>(ServiceLifetime lifetime)
+        public override IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddInvoker<TInvoker>(
+            ServiceLifetime lifetime)
         {
             base.AddInvoker<TInvoker>(lifetime);
             ResolveMessageParserResolver(typeof(TInvoker), _maxParserLifetime);
@@ -496,7 +551,8 @@ namespace RUCore.Common.Builders
         /// </summary>
         /// <param name="invokerInstance"></param>
         /// <returns></returns>
-        public override IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddInvoker(TInvokerService invokerInstance)
+        public override IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddInvoker(
+            TInvokerService invokerInstance)
         {
             base.AddInvoker(invokerInstance);
             ResolveMessageParserResolver(invokerInstance.GetType(), ServiceLifetime.Singleton);
@@ -510,7 +566,8 @@ namespace RUCore.Common.Builders
         /// <param name="factory"></param>
         /// <param name="lifetime"></param>
         /// <returns></returns>
-        public override IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddInvoker<TInvoker>(Func<IServiceProvider, TInvoker> factory, ServiceLifetime lifetime)
+        public override IMessageFrameworkBuilder<TInvokerService, TClientService, THandlerService> AddInvoker<TInvoker>(
+            Func<IServiceProvider, TInvoker> factory, ServiceLifetime lifetime)
         {
             base.AddInvoker(factory, lifetime);
             ResolveMessageParserResolver(typeof(TInvoker), _maxParserLifetime);
@@ -524,7 +581,8 @@ namespace RUCore.Common.Builders
         /// <param name="lifetime"></param>
         protected virtual void ResolveMessageParser(Type handlerType, ServiceLifetime? lifetime)
         {
-            foreach (RegisterParserAttribute attribute in handlerType.GetCustomAttributes<RegisterParserAttribute>(false))
+            foreach (RegisterParserAttribute attribute in
+                     handlerType.GetCustomAttributes<RegisterParserAttribute>(false))
             {
                 ServiceLifetime parserLifetime = lifetime ?? attribute.Lifetime ?? DefaultParserLifetime;
                 AddMessageParser(attribute.ServiceType, attribute.ImplementationType, parserLifetime);
@@ -538,9 +596,11 @@ namespace RUCore.Common.Builders
         /// <param name="lifetime"></param>
         protected virtual void ResolveMessageParserResolver(Type invokerType, ServiceLifetime? lifetime)
         {
-            foreach (RegisterParserResolverAttribute attribute in invokerType.GetCustomAttributes<RegisterParserResolverAttribute>(false))
+            foreach (RegisterParserResolverAttribute attribute in invokerType
+                        .GetCustomAttributes<RegisterParserResolverAttribute>(false))
             {
-                ServiceLifetime parserResolverLifetime = lifetime ?? attribute.Lifetime ?? DefaultParserResolverLifetime;
+                ServiceLifetime parserResolverLifetime =
+                    lifetime ?? attribute.Lifetime ?? DefaultParserResolverLifetime;
                 AddMessageParserResolver(attribute.ServiceType, attribute.ImplementationType, parserResolverLifetime);
             }
         }

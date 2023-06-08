@@ -5,5 +5,6 @@
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public sealed class SuppressAutoMappingAttribute : Attribute
-    { }
+    {
+    }
 }

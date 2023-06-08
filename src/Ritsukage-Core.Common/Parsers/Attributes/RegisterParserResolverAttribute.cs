@@ -4,7 +4,7 @@ using RUCore.Common.Attributes;
 namespace RUCore.Common.Parsers.Attributes
 {
     /// <summary>
-    /// Register a <see cref="IMessageParserResolver{TRawdata, TParserService}"/> to <see cref="IServiceCollection"/>
+    /// Register a <see cref="IMessageParserResolver{TRawData, TParserService}"/> to <see cref="IServiceCollection"/>
     /// </summary>
     public class RegisterParserResolverAttribute : RegisterBaseAttribute
     {
@@ -14,11 +14,12 @@ namespace RUCore.Common.Parsers.Attributes
         }
 
         /// <summary>
-        /// Register a <see cref="IMessageParserResolver{TRawdata, TParserService}"/> to <see cref="IServiceCollection"/>
+        /// Register a <see cref="IMessageParserResolver{TRawData, TParserService}"/> to <see cref="IServiceCollection"/>
         /// </summary>
         /// <param name="implementationType"></param>
         /// <param name="lifetime"></param>
-        public RegisterParserResolverAttribute(Type implementationType, ServiceLifetime? lifetime) : base(implementationType, lifetime)
+        public RegisterParserResolverAttribute(Type implementationType, ServiceLifetime? lifetime) : base(
+            implementationType, lifetime)
         {
         }
 
@@ -34,7 +35,9 @@ namespace RUCore.Common.Parsers.Attributes
             foreach (Type interfaceType in implementationType.GetInterfaces())
                 if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == openGeneric)
                     return interfaceType;
-            throw new ArgumentException($"Given {implementationType.FullName} does not implement {openGeneric.FullName}", nameof(implementationType));
+            throw new ArgumentException(
+                $"Given {implementationType.FullName} does not implement {openGeneric.FullName}",
+                nameof(implementationType));
         }
     }
 }

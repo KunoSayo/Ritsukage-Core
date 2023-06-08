@@ -10,7 +10,8 @@ namespace RUCore.Common.Logging
     /// </summary>
     public static class CoreLogger
     {
-        static readonly ISetupBuilder Builder;
+        private static readonly ISetupBuilder Builder;
+
         static CoreLogger()
         {
             var config = new ConfigurationBuilder().Build();
@@ -23,12 +24,16 @@ namespace RUCore.Common.Logging
         /// <param name="name">name of Logger</param>
         /// <returns>Specified named logger</returns>
         public static Logger GetLogger(string name)
-            => Builder.GetLogger(name);
+        {
+            return Builder.GetLogger(name);
+        }
 
         /// <summary>
         /// Flush any pending log messages (in case of asynchronous targets) with the default timeout of 15 seconds.
         /// </summary>
         public static void Flush()
-            => LogManager.Flush();
+        {
+            LogManager.Flush();
+        }
     }
 }

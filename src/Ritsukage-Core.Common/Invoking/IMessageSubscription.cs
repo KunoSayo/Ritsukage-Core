@@ -22,8 +22,9 @@ namespace RUCore.Common.Invoking
     /// <typeparam name="TClient"></typeparam>
     /// <typeparam name="TMessage"></typeparam>
     public interface IMessageSubscription<TClient, TMessage> : IMessageSubscription,
-                                                               IMessageHandler<TClient, TMessage> where TClient : IMessageClient
-                                                                                                  where TMessage : IMessage
+                                                               IMessageHandler<TClient, TMessage>
+        where TClient : IMessageClient
+        where TMessage : IMessage
     {
         /// <summary>
         /// Add a handler to the subscription.
@@ -33,6 +34,8 @@ namespace RUCore.Common.Invoking
         DynamicHandlerRegistration AddHandler(IMessageHandler<TClient, TMessage> handler);
 
         Task IMessageHandler.HandleMessageAsync(IMessageClient client, IMessage message)
-            => HandleMessageAsync((TClient)client, (TMessage)message);
+        {
+            return HandleMessageAsync((TClient)client, (TMessage)message);
+        }
     }
 }

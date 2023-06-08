@@ -4,13 +4,13 @@ using RUCore.Common.Attributes;
 namespace RUCore.Common.Parsers.Attributes
 {
     /// <summary>
-    /// Targeting <see cref="IMessageParser{TRawdata, TMessage}"/> implementations
+    /// Targeting <see cref="IMessageParser{TRawData, TMessage}"/> implementations
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = true)]
     public class RegisterParserAttribute : RegisterBaseAttribute
     {
         /// <summary>
-        /// Register a <see cref="IMessageParser{TRawdata, TMessage}"/> for the given <paramref name="implementationType"/>
+        /// Register a <see cref="IMessageParser{TRawData, TMessage}"/> for the given <paramref name="implementationType"/>
         /// </summary>
         /// <param name="implementationType"></param>
         public RegisterParserAttribute(Type implementationType) : this(implementationType, null)
@@ -18,11 +18,12 @@ namespace RUCore.Common.Parsers.Attributes
         }
 
         /// <summary>
-        /// Register a <see cref="IMessageParser{TRawdata, TMessage}"/> for the given <paramref name="implementationType"/> with the given <paramref name="lifetime"/>
+        /// Register a <see cref="IMessageParser{TRawData, TMessage}"/> for the given <paramref name="implementationType"/> with the given <paramref name="lifetime"/>
         /// </summary>
         /// <param name="implementationType"></param>
         /// <param name="lifetime"></param>
-        public RegisterParserAttribute(Type implementationType, ServiceLifetime? lifetime) : base(implementationType, lifetime)
+        public RegisterParserAttribute(Type implementationType, ServiceLifetime? lifetime) : base(
+            implementationType, lifetime)
         {
         }
 
@@ -38,7 +39,9 @@ namespace RUCore.Common.Parsers.Attributes
             foreach (Type interfaceType in implementationType.GetInterfaces())
                 if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == openGeneric)
                     return interfaceType;
-            throw new ArgumentException($"The given {implementationType.FullName} does not implement {openGeneric.FullName}", nameof(implementationType));
+            throw new ArgumentException(
+                $"The given {implementationType.FullName} does not implement {openGeneric.FullName}",
+                nameof(implementationType));
         }
     }
 }

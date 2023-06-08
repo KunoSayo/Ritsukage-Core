@@ -8,7 +8,7 @@ namespace RUCore.Common.Invoking
     /// <typeparam name="TClient"></typeparam>
     /// <typeparam name="TSubscription"></typeparam>
     public interface IMessageSubscriptionResolver<in TClient, out TSubscription> where TClient : IMessageClient
-                                                                                 where TSubscription : IMessageSubscription
+        where TSubscription : IMessageSubscription
     {
         /// <summary>
         /// Resolve subscription by client type.

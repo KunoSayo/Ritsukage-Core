@@ -6,7 +6,8 @@ namespace RUCore.Common.Clients
     /// Message client
     /// </summary>
     /// <typeparam name="TMessage"></typeparam>
-    public abstract class MessageDispatchClient<TMessage> : MessageClient, IMessageDispatchClient<TMessage> where TMessage : IMessage
+    public abstract class MessageDispatchClient<TMessage> : MessageClient, IMessageDispatchClient<TMessage>
+        where TMessage : IMessage
     {
         /// <summary>
         /// Dispatches the message to all handlers.

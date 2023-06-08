@@ -16,7 +16,9 @@ namespace RUCore.Common.Handlers
         /// <returns></returns>
         /// <exception cref="NotSupportedException"></exception>
         Task HandleMessageAsync(IMessageClient client, IMessage message)
-            => throw new NotSupportedException();
+        {
+            throw new NotSupportedException();
+        }
     }
 
     /// <summary>
@@ -24,8 +26,9 @@ namespace RUCore.Common.Handlers
     /// </summary>
     /// <typeparam name="TMessageClient"></typeparam>
     /// <typeparam name="TMessage"></typeparam>
-    public interface IMessageHandler<in TMessageClient, in TMessage> : IMessageHandler where TMessageClient : IMessageClient
-                                                                                where TMessage : IMessage
+    public interface IMessageHandler<in TMessageClient, in TMessage> : IMessageHandler
+        where TMessageClient : IMessageClient
+        where TMessage : IMessage
     {
         /// <summary>
         /// Handle message
@@ -35,7 +38,9 @@ namespace RUCore.Common.Handlers
         /// <returns></returns>
         /// <exception cref="NotSupportedException"></exception>
         Task HandleMessageAsync(TMessageClient client, TMessage message)
-            => throw new NotSupportedException();
+        {
+            throw new NotSupportedException();
+        }
     }
 
     /// <summary>
@@ -43,8 +48,9 @@ namespace RUCore.Common.Handlers
     /// </summary>
     /// <typeparam name="TMessageClient"></typeparam>
     /// <typeparam name="TMessage"></typeparam>
-    public abstract class MessageHandler<TMessageClient, TMessage> : IMessageHandler<TMessageClient, TMessage> where TMessageClient : IMessageClient
-                                                                                                 where TMessage : IMessage
+    public abstract class MessageHandler<TMessageClient, TMessage> : IMessageHandler<TMessageClient, TMessage>
+        where TMessageClient : IMessageClient
+        where TMessage : IMessage
     {
         /// <summary>
         /// Handle message
@@ -63,6 +69,8 @@ namespace RUCore.Common.Handlers
         /// <returns></returns>
         /// <exception cref="NotSupportedException"></exception>
         public virtual Task HandleMessageAsync(IMessageClient client, IMessage message)
-            => throw new NotSupportedException();
+        {
+            throw new NotSupportedException();
+        }
     }
 }

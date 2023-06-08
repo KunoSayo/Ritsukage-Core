@@ -14,13 +14,12 @@
     /// <summary>
     /// Message interface
     /// </summary>
-    /// <typeparam name="TRawdata"></typeparam>
-
-    public interface IMessage<TRawdata> : IMessage
+    /// <typeparam name="TRawData"></typeparam>
+    public interface IMessage<TRawData> : IMessage
     {
         /// <summary>
-        /// Rawdata
+        /// RawData
         /// </summary>
-        TRawdata Rawdata { get; }
+        TRawData RawData { get; }
     }
 }
