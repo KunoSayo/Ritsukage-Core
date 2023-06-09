@@ -35,7 +35,7 @@ namespace RUCore.Common.Invoking
         /// <param name="services"></param>
         /// <param name="logger"></param>
         /// <param name="subscriptionResolver"></param>
-        protected MessageHandlerInvoker(IServiceProvider                               services,
+        protected MessageHandlerInvoker(IServiceProvider services,
                                         ILogger<MessageHandlerInvoker<TClientService>> logger,
                                         IMessageSubscriptionResolver<TClientService, IMessageSubscription>
                                             subscriptionResolver)
@@ -82,7 +82,7 @@ namespace RUCore.Common.Invoking
         /// <param name="messageType"></param>
         /// <param name="subscription"></param>
         /// <returns></returns>
-        protected virtual bool TryResolveSubscription(Type                                          messageType,
+        protected virtual bool TryResolveSubscription(Type messageType,
                                                       [NotNullWhen(true)] out IMessageSubscription? subscription)
         {
             return (subscription = SubscriptionResolver.ResolveByMessage(messageType)) != null;
@@ -112,7 +112,8 @@ namespace RUCore.Common.Invoking
         /// <summary>
         /// Parser resolver.
         /// </summary>
-        protected virtual IMessageParserResolver<TRawData, IMessageParser<TRawData>> ParserResolver => InnerParserResolver;
+        protected virtual IMessageParserResolver<TRawData, IMessageParser<TRawData>> ParserResolver =>
+            InnerParserResolver;
 
         /// <summary>
         /// Message handler invoker.
@@ -121,7 +122,7 @@ namespace RUCore.Common.Invoking
         /// <param name="logger"></param>
         /// <param name="subscriptionResolver"></param>
         /// <param name="parserResolver"></param>
-        protected MessageHandlerInvoker(IServiceProvider                                         services,
+        protected MessageHandlerInvoker(IServiceProvider services,
                                         ILogger<MessageHandlerInvoker<TClientService, TRawData>> logger,
                                         IMessageSubscriptionResolver<TClientService, IMessageSubscription>
                                             subscriptionResolver,
@@ -161,7 +162,7 @@ namespace RUCore.Common.Invoking
         /// <param name="rawData"></param>
         /// <param name="parsers"></param>
         /// <returns></returns>
-        protected virtual bool TryResolveParsers(in                      TRawData                               rawData,
+        protected virtual bool TryResolveParsers(in TRawData rawData,
                                                  [NotNullWhen(true)] out IEnumerable<IMessageParser<TRawData>>? parsers)
         {
             parsers = ParserResolver.ResolveParsers(in rawData);

@@ -7,9 +7,9 @@
         /// <param name="contents">An <see cref="IEnumerable{HttpContent}"/>, will be serialized to multipart/form-data MIME type.</param>
         /// <param name="token">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <inheritdoc cref="HttpClient.PostAsync(Uri, HttpContent, CancellationToken)"/>
-        public static Task<HttpResponseMessage> PostAsync(this HttpClient          client, Uri uri,
+        public static Task<HttpResponseMessage> PostAsync(this HttpClient client, Uri uri,
                                                           IEnumerable<HttpContent> contents,
-                                                          CancellationToken        token = default)
+                                                          CancellationToken token = default)
         {
             MultipartFormDataContent multipart = new();
             foreach (HttpContent content in contents)
@@ -25,9 +25,9 @@
         /// <param name="contents"></param>
         /// <param name="token"></param>
         /// <inheritdoc cref="PostAsync(HttpClient, Uri, IEnumerable{HttpContent}, CancellationToken)"/>
-        public static Task<HttpResponseMessage> PostAsync(this HttpClient          client, string url,
+        public static Task<HttpResponseMessage> PostAsync(this HttpClient client, string url,
                                                           IEnumerable<HttpContent> contents,
-                                                          CancellationToken        token = default)
+                                                          CancellationToken token = default)
         {
             return client.PostAsync(new Uri(url), contents, token);
         }

@@ -43,7 +43,7 @@ namespace RUCore.Common.Invoking.Attributes
         /// <param name="serviceType"></param>
         /// <param name="implementationType"></param>
         /// <param name="lifetime"></param>
-        public RegisterMessageSubscriptionAttribute(Type?            serviceType, Type implementationType,
+        public RegisterMessageSubscriptionAttribute(Type? serviceType, Type implementationType,
                                                     ServiceLifetime? lifetime) : base(
             serviceType, implementationType, lifetime)
         {

@@ -15,7 +15,7 @@ namespace RUCore.Common.Extensions
         /// <param name="second"></param>
         /// <returns></returns>
         public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> first,
-                                                       Expression<Func<T, bool>>      second)
+                                                       Expression<Func<T, bool>> second)
         {
             return first.AndAlso(second, Expression.AndAlso);
         }
@@ -28,20 +28,20 @@ namespace RUCore.Common.Extensions
         /// <param name="second"></param>
         /// <returns></returns>
         public static Expression<Func<T, bool>> OrElse<T>(this Expression<Func<T, bool>> first,
-                                                          Expression<Func<T, bool>>      second)
+                                                          Expression<Func<T, bool>> second)
         {
             return first.AndAlso(second, Expression.OrElse);
         }
 
-        private static Expression<Func<T, bool>> AndAlso<T>(this Expression<Func<T, bool>>                 expr1,
-                                                            Expression<Func<T, bool>>                      expr2,
+        private static Expression<Func<T, bool>> AndAlso<T>(this Expression<Func<T, bool>> expr1,
+                                                            Expression<Func<T, bool>> expr2,
                                                             Func<Expression, Expression, BinaryExpression> func)
         {
-            var parameter    = Expression.Parameter(typeof(T));
-            var leftVisitor  = new ReplaceExpressionVisitor(expr1.Parameters[0], parameter);
-            var left         = leftVisitor.Visit(expr1.Body);
+            var parameter = Expression.Parameter(typeof(T));
+            var leftVisitor = new ReplaceExpressionVisitor(expr1.Parameters[0], parameter);
+            var left = leftVisitor.Visit(expr1.Body);
             var rightVisitor = new ReplaceExpressionVisitor(expr2.Parameters[0], parameter);
-            var right        = rightVisitor.Visit(expr2.Body);
+            var right = rightVisitor.Visit(expr2.Body);
             return Expression.Lambda<Func<T, bool>>(func(left, right), parameter);
         }
 

@@ -29,7 +29,7 @@ namespace RUCore.Common.Extensions
         /// <param name="token"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public static ValueTask ReceiveFullyAsync(this Socket       socket, byte[] buffer, int offset, int size,
+        public static ValueTask ReceiveFullyAsync(this Socket socket, byte[] buffer, int offset, int size,
                                                   CancellationToken token = default)
         {
             if (offset + size > buffer.Length)
@@ -46,7 +46,7 @@ namespace RUCore.Common.Extensions
         /// <param name="memory"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static ValueTask ReceiveFullyAsync(this Socket       socket, Memory<byte> memory,
+        public static ValueTask ReceiveFullyAsync(this Socket socket, Memory<byte> memory,
                                                   CancellationToken token = default)
         {
 #pragma warning disable CA2012 // Use ValueTasks correctly
@@ -63,7 +63,7 @@ namespace RUCore.Common.Extensions
             return Await(socket, memory, vt, token);
         }
 
-        private static async ValueTask Await(Socket            socket, Memory<byte> memory, ValueTask<int> recvTask,
+        private static async ValueTask Await(Socket socket, Memory<byte> memory, ValueTask<int> recvTask,
                                              CancellationToken token)
         {
             while (true)

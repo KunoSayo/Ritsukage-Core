@@ -1,16 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CacheTower.Serializers.SystemTextJson;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Extensions.Logging;
 using RUCore.Common.Logging;
+using RUCore.Config;
 using System.Diagnostics;
 using System.Text;
 
 Console.Title = "Ritsukage Core";
 DateTime launchTime = DateTime.Now;
-Logger   mainLogger = CoreLogger.GetLogger("Main");
+Logger mainLogger = CoreLogger.GetLogger("Main");
 
 AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
 {
@@ -47,26 +49,90 @@ else
     Console.WriteLine("程序主逻辑已结束");
 }
 
-static Task BeginService()
+Task BeginService()
 {
     var hb = Host.CreateDefaultBuilder()
+                  //Configure logging
                  .ConfigureLogging(builder =>
                   {
-                      //Remove default logging
+                      //Disable default logging
                       builder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.None);
+                      //Use NLog as logging provider
                       builder.AddNLog();
                   })
-                 .ConfigureServices((context, service) =>
+                 .ConfigureServices(service =>
                   {
-                      //Need to register basic services here
-                      //Including database services, etc.
-                      /*
-                      service.AddDbContext<DbContext>(dbContextOptionsBuilder =>
+                      //Load config
+                      Config? config = null;
+                      if (!File.Exists("config.toml"))
                       {
-                          dbContextOptionsBuilder.UseSqlite($"Data Source=data.db");
-                      });
-                      */
-                      //TODO: Add services here
+                          config = new Config();
+                          config.Cache.Add(Config.CacheLayerConfigTable.MemoryLayerConfigTable());
+                          config.Cache.Add(
+                              Config.CacheLayerConfigTable.FileLayerConfigTable("cache", TimeSpan.FromMinutes(30)));
+                          config.Database = Config.DatabaseTargetConfigTable.SqliteDatabaseTargetConfigTable("data.db");
+                          config.Save("config.toml");
+                      }
+                      else
+                      {
+                          config = Config.Load("config.toml");
+                      }
+
+                      //Configure database service
+                      switch (config.Database?.Type ?? string.Empty)
+                      {
+                          case "sqlite":
+                              service.AddDbContext<DbContext>(builder =>
+                              {
+                                  builder.UseSqlite(
+                                      $"Data Source={config.Database?.Path ?? "data.db"}");
+                              });
+                              break;
+                          case "sqlserver":
+                              service.AddDbContext<DbContext>(builder =>
+                              {
+                                  builder.UseSqlServer(config.Database?.ConnectString);
+                              });
+                              break;
+                          default:
+                              service.AddDbContext<DbContext>(builder => { builder.UseSqlite("Data Source=data.db"); });
+                              break;
+                      }
+
+                      //Configure cache service
+                      if (config.Cache.Any())
+                      {
+                          service.AddCacheStack(builder =>
+                          {
+                              //Add cache layers which you want to use
+                              foreach (var layer in config.Cache)
+                              {
+                                  switch (layer.Type)
+                                  {
+                                      case "memory":
+                                          builder.AddMemoryCacheLayer();
+                                          break;
+                                      case "file":
+                                          builder.AddFileCacheLayer(new(layer.Path ?? "cache",
+                                                                        new SystemTextJsonCacheSerializer(new()),
+                                                                        TimeSpan.FromSeconds(layer.ExpireTime ??
+                                                                            TimeSpan.FromMinutes(30).TotalSeconds)));
+                                          break;
+                                  }
+                              }
+
+                              builder.WithCleanupFrequency(config.CleanupFrequency ?? TimeSpan.FromMinutes(5));
+                          });
+                      }
+                      else
+                      {
+                          service.AddCacheStack(builder =>
+                          {
+                              builder.AddMemoryCacheLayer()
+                                     .WithCleanupFrequency(config.CleanupFrequency ?? TimeSpan.FromMinutes(5));
+                          });
+                      }
+                      //TODO: Add other services here
                   });
     return hb.RunConsoleAsync();
 }

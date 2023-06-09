@@ -11,9 +11,9 @@ namespace RUCore.Common.Invoking
         public struct Enumerator : IEnumerator<IMessageHandler>
         {
             private readonly MessageSubscription _subscription;
-            private          IMessageHandler?    _current;
-            private          int                 _staticIdx;
-            private          RegistrationNode?   _dynamicNode;
+            private IMessageHandler? _current;
+            private int _staticIdx;
+            private RegistrationNode? _dynamicNode;
 
             /// <summary>
             /// Enumerates the handlers of the subscription.

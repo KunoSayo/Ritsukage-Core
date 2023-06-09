@@ -7,7 +7,6 @@ namespace RUCore.Common.Models.General
     /// </summary>
     public abstract class ProtocolMessage : Message, IProtocolMessage
     {
-
         /// <inheritdoc/>
         public virtual long Id { get; set; }
 

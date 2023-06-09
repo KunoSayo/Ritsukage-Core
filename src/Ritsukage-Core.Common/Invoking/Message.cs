@@ -1,6 +1,5 @@
 ﻿namespace RUCore.Common.Invoking
 {
-    
     /// <summary>
     /// Message
     /// </summary>

@@ -42,7 +42,7 @@ namespace RUCore.Common.Invoking
         /// <param name="filtered"></param>
         /// <returns></returns>
         protected abstract IMessageHandler[] ResolveStaticHandlers(LinkedList<IMessageHandler> handlers,
-                                                                   List<IMessageHandler>       filtered);
+                                                                   List<IMessageHandler> filtered);
 
         /// <summary>
         /// Add handler.
@@ -121,7 +121,7 @@ namespace RUCore.Common.Invoking
         /// <param name="filtered"></param>
         /// <returns></returns>
         protected override IMessageHandler[] ResolveStaticHandlers(LinkedList<IMessageHandler> handlers,
-                                                                   List<IMessageHandler>       filtered)
+                                                                   List<IMessageHandler> filtered)
         {
             if (handlers.Count != 0)
             {
@@ -167,7 +167,7 @@ namespace RUCore.Common.Invoking
             }
 
             RegistrationNode? node = registrations.Register(handler);
-            long              id   = node.Id;
+            long id = node.Id;
             return !_disposed || !registrations.Unregister(id, node)
                 ? new DynamicHandlerRegistration(id, node)
                 : default;

@@ -5,7 +5,7 @@
     /// </summary>
     public struct DynamicHandlerRegistration : IEquatable<DynamicHandlerRegistration>, IDisposable
     {
-        private readonly long                                 _id;
+        private readonly long _id;
         private readonly MessageSubscription.RegistrationNode _node;
 
         internal DynamicHandlerRegistration(long id, MessageSubscription.RegistrationNode node)

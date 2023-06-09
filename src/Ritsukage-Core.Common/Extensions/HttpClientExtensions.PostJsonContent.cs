@@ -5,7 +5,7 @@ namespace RUCore.Common.Extensions
     public static partial class HttpClientExtensions
     {
         /// <inheritdoc cref="PostAsJsonAsync{TValue}(HttpClient, Uri, TValue, JsonSerializerOptions?, CancellationToken)"/>
-        public static Task<HttpResponseMessage> PostAsJsonAsync<TValue>(this HttpClient   client, Uri uri, TValue value,
+        public static Task<HttpResponseMessage> PostAsJsonAsync<TValue>(this HttpClient client, Uri uri, TValue value,
                                                                         CancellationToken token = default)
         {
             return client.PostAsJsonAsync(uri, value, null, token);

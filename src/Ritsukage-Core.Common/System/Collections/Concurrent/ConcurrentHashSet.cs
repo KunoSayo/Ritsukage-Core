@@ -15,12 +15,12 @@ namespace RUCore.Common.System.Collections.Concurrent
     public class ConcurrentHashSet<T> : IReadOnlyCollection<T>, ICollection<T>
     {
         private const int DefaultCapacity = 31;
-        private const int MaxLockNumber   = 1024;
+        private const int MaxLockNumber = 1024;
 
         private readonly IEqualityComparer<T> _comparer;
-        private readonly bool                 _growLockArray;
+        private readonly bool _growLockArray;
 
-        private          int    _budget;
+        private int _budget;
         private volatile Tables _tables;
 
         private static int DefaultConcurrencyLevel => Environment.ProcessorCount;
@@ -38,7 +38,7 @@ namespace RUCore.Common.System.Collections.Concurrent
         {
             get
             {
-                var count         = 0;
+                var count = 0;
                 var acquiredLocks = 0;
                 try
                 {
@@ -220,7 +220,7 @@ namespace RUCore.Common.System.Collections.Concurrent
         {
         }
 
-        private ConcurrentHashSet(int                   concurrencyLevel, int capacity, bool growLockArray,
+        private ConcurrentHashSet(int concurrencyLevel, int capacity, bool growLockArray,
                                   IEqualityComparer<T>? comparer)
         {
             if (concurrencyLevel < 1) throw new ArgumentOutOfRangeException(nameof(concurrencyLevel));
@@ -240,7 +240,7 @@ namespace RUCore.Common.System.Collections.Concurrent
             }
 
             var countPerLock = new int[locks.Length];
-            var buckets      = new Node[capacity];
+            var buckets = new Node[capacity];
             _tables = new Tables(buckets, locks, countPerLock);
 
             _growLockArray = growLockArray;
@@ -462,7 +462,7 @@ namespace RUCore.Common.System.Collections.Concurrent
                                    tables.Locks.Length);
 
                 var resizeDesired = false;
-                var lockTaken     = false;
+                var lockTaken = false;
                 try
                 {
                     if (acquireLock)
@@ -543,7 +543,7 @@ namespace RUCore.Common.System.Collections.Concurrent
         private void GrowTable(Tables tables)
         {
             const int maxArrayLength = 0X7FEFFFFF;
-            var       locksAcquired  = 0;
+            var locksAcquired = 0;
             try
             {
                 // The thread that first obtains _locks[0] will be the one doing the resize operation
@@ -581,7 +581,7 @@ namespace RUCore.Common.System.Collections.Concurrent
 
                 // Compute the new table size. We find the smallest integer larger than twice the previous table size, and not divisible by
                 // 2,3,5 or 7. We can consider a different table-sizing policy in the future.
-                var newLength         = 0;
+                var newLength = 0;
                 var maximizeTableSize = false;
                 try
                 {
@@ -636,7 +636,7 @@ namespace RUCore.Common.System.Collections.Concurrent
                     }
                 }
 
-                var newBuckets      = new Node[newLength];
+                var newBuckets = new Node[newLength];
                 var newCountPerLock = new int[newLocks.Length];
 
                 // Copy all data into a new table, creating new nodes for all elements
@@ -727,7 +727,7 @@ namespace RUCore.Common.System.Collections.Concurrent
 
         private class Tables
         {
-            public readonly Node[]   Buckets;
+            public readonly Node[] Buckets;
             public readonly object[] Locks;
 
             public volatile int[] CountPerLock;
@@ -742,7 +742,7 @@ namespace RUCore.Common.System.Collections.Concurrent
 
         private class Node
         {
-            public readonly T   Item;
+            public readonly T Item;
             public readonly int Hashcode;
 
             public volatile Node Next;

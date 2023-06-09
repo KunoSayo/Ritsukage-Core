@@ -38,7 +38,7 @@ namespace RUCore.Common.Extensions
         /// <param name="token">A <see cref="CancellationToken"/> which may be used to cancel the serialize operation.</param>
         /// <inheritdoc cref="HttpContent.ReadAsByteArrayAsync()"/>
         public static async Task<byte[]> GetBytesAsync(this Task<HttpResponseMessage> responseTask,
-                                                       CancellationToken              token = default)
+                                                       CancellationToken token = default)
         {
             using HttpResponseMessage response = await responseTask.ConfigureAwait(false);
             return await response.Content.ReadAsByteArrayAsync(token);
@@ -48,7 +48,7 @@ namespace RUCore.Common.Extensions
         /// <param name="token">A <see cref="CancellationToken"/> which may be used to cancel the serialize operation.</param>
         /// <inheritdoc cref="HttpContent.ReadAsStringAsync()"/>
         public static async Task<string> GetStringAsync(this Task<HttpResponseMessage> responseTask,
-                                                        CancellationToken              token = default)
+                                                        CancellationToken token = default)
         {
             using HttpResponseMessage response = await responseTask.ConfigureAwait(false);
             return await response.Content.ReadAsStringAsync(token);
@@ -78,7 +78,7 @@ namespace RUCore.Common.Extensions
 
         /// <inheritdoc cref="GetObjectAsync{T}(Task{HttpResponseMessage}, JsonSerializerOptions?, CancellationToken)"/>
         public static Task<T?> GetObjectAsync<T>(this Task<HttpResponseMessage> responseTask,
-                                                 CancellationToken              token = default)
+                                                 CancellationToken token = default)
         {
             return responseTask.GetObjectAsync<T?>(null, token);
         }
@@ -92,8 +92,8 @@ namespace RUCore.Common.Extensions
         /// <param name="token">A <see cref="CancellationToken"/> which may be used to cancel the deserialize operation.</param>
         /// <returns>A task that represents the asynchronous deserialize operation.</returns>
         public static async Task<T?> GetObjectAsync<T>(this Task<HttpResponseMessage> responseTask,
-                                                       JsonSerializerOptions?         options,
-                                                       CancellationToken              token = default)
+                                                       JsonSerializerOptions? options,
+                                                       CancellationToken token = default)
         {
             using HttpResponseMessage response = await responseTask.ConfigureAwait(false);
             return await response.Content.ReadFromJsonAsync<T?>(options, token);
@@ -101,7 +101,7 @@ namespace RUCore.Common.Extensions
 
         /// <inheritdoc cref="GetObjectAsync(Task{HttpResponseMessage}, Type, JsonSerializerOptions?, CancellationToken)"/>
         public static Task<object?> GetObjectAsync(this Task<HttpResponseMessage> responseTask, Type returnType,
-                                                   CancellationToken              token = default)
+                                                   CancellationToken token = default)
         {
             return responseTask.GetObjectAsync(returnType, null, token);
         }
@@ -115,8 +115,8 @@ namespace RUCore.Common.Extensions
         /// <param name="token"></param>
         /// <inheritdoc cref="GetObjectAsync{T}(Task{HttpResponseMessage}, JsonSerializerOptions?, CancellationToken)"/>
         public static async Task<object?> GetObjectAsync(this Task<HttpResponseMessage> responseTask, Type returnType,
-                                                         JsonSerializerOptions?         options,
-                                                         CancellationToken              token = default)
+                                                         JsonSerializerOptions? options,
+                                                         CancellationToken token = default)
         {
             using HttpResponseMessage response = await responseTask.ConfigureAwait(false);
             return await response.Content.ReadFromJsonAsync(returnType, options, token);
@@ -124,7 +124,7 @@ namespace RUCore.Common.Extensions
 
         /// <inheritdoc cref="GetJsonAsync(Task{HttpResponseMessage}, JsonDocumentOptions, CancellationToken)"/>
         public static Task<JsonDocument> GetJsonAsync(this Task<HttpResponseMessage> responseTask,
-                                                      CancellationToken              token = default)
+                                                      CancellationToken token = default)
         {
             return responseTask.GetJsonAsync(default, token);
         }
@@ -137,8 +137,8 @@ namespace RUCore.Common.Extensions
         /// <param name="token">A <see cref="CancellationToken"/> which may be used to cancel the deserialize operation.</param>
         /// <returns>A task that represents the asynchronous deserialize operation.</returns>
         public static async Task<JsonDocument> GetJsonAsync(this Task<HttpResponseMessage> responseTask,
-                                                            JsonDocumentOptions            options,
-                                                            CancellationToken              token = default)
+                                                            JsonDocumentOptions options,
+                                                            CancellationToken token = default)
         {
             using HttpResponseMessage response = await responseTask.ConfigureAwait(false);
             Stream
@@ -255,7 +255,7 @@ namespace RUCore.Common.Extensions
         /// <param name="site"></param>
         /// <param name="dest"></param>
         public static void SetSecPolicy(this HttpClient client, string? mode = "cors", string? site = "same-site",
-                                        string?         dest = "empty")
+                                        string? dest = "empty")
         {
             client.DefaultRequestHeaders.SetSecPolicy(mode, site, dest);
         }

@@ -114,7 +114,7 @@ namespace RUCore.Common.Builders
         /// <param name="descriptor"></param>
         /// <param name="addedDescriptor"></param>
         /// <returns></returns>
-        protected bool TryAddService(ServiceDescriptor                          descriptor,
+        protected bool TryAddService(ServiceDescriptor descriptor,
                                      [NotNullWhen(true)] out ServiceDescriptor? addedDescriptor)
         {
             int count = Services.Count;
@@ -359,7 +359,7 @@ namespace RUCore.Common.Builders
         /// <param name="addedDescriptors"></param>
         /// <param name="lifetime"></param>
         protected virtual void ReplaceServiceLifetime(ICollection<ServiceDescriptor> addedDescriptors,
-                                                      ServiceLifetime                lifetime)
+                                                      ServiceLifetime lifetime)
         {
             for (int i = Services.Count - 1; i >= 0; i--)
             {
@@ -370,7 +370,7 @@ namespace RUCore.Common.Builders
                     addedDescriptors.Remove(descriptor);
                     descriptor = descriptor.ImplementationFactory != null
                         ? new ServiceDescriptor(descriptor.ServiceType, descriptor.ImplementationFactory, lifetime)
-                        : new ServiceDescriptor(descriptor.ServiceType, descriptor.ImplementationType!,   lifetime);
+                        : new ServiceDescriptor(descriptor.ServiceType, descriptor.ImplementationType!, lifetime);
                     Services.Add(descriptor);
                     addedDescriptors.Add(descriptor);
                 }

@@ -15,7 +15,7 @@ namespace RUCore.Common.Extensions
         /// <param name="token"></param>
         /// <returns></returns>
         /// <exception cref="EndOfStreamException"></exception>
-        public static async ValueTask ReceiveFullyAsync(this WebSocket    ws, Memory<byte> buffer,
+        public static async ValueTask ReceiveFullyAsync(this WebSocket ws, Memory<byte> buffer,
                                                         CancellationToken token = default)
         {
             while (true)
@@ -41,12 +41,12 @@ namespace RUCore.Common.Extensions
         /// <param name="webSocket"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static async ValueTask<byte[]> ReceiveFullyAsync(this WebSocket    webSocket,
+        public static async ValueTask<byte[]> ReceiveFullyAsync(this WebSocket webSocket,
                                                                 CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            byte[]                      buffer = new byte[1024];
-            using MemoryStream          ms     = new(1024);
+            byte[] buffer = new byte[1024];
+            using MemoryStream ms = new(1024);
             ValueWebSocketReceiveResult result;
             do
             {

@@ -28,7 +28,7 @@
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="EndOfStreamException"></exception>
-        public static async ValueTask ReadFullyAsync(this Stream       stream, byte[] buffer, int offset, int size,
+        public static async ValueTask ReadFullyAsync(this Stream stream, byte[] buffer, int offset, int size,
                                                      CancellationToken token = default)
         {
             if (offset + size > buffer.Length)

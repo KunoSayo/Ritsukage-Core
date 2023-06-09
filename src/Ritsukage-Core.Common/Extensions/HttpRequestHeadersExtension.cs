@@ -50,8 +50,8 @@ namespace RUCore.Common.Extensions
         /// <param name="mode"></param>
         /// <param name="site"></param>
         /// <param name="dest"></param>
-        public static void SetSecPolicy(this HttpRequestHeaders headers,            string? mode = "cors",
-                                        string?                 site = "same-site", string? dest = "empty")
+        public static void SetSecPolicy(this HttpRequestHeaders headers, string? mode = "cors",
+                                        string? site = "same-site", string? dest = "empty")
         {
             if (!string.IsNullOrEmpty(mode))
                 headers.Add("Sec-Fetch-Mode", mode);

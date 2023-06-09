@@ -51,15 +51,15 @@ namespace RUCore.Common.Invoking
         /// <exception cref="InvalidOperationException"></exception>
         public virtual IEnumerable<TSubscription> ResolveByHandler(Type handlerType)
         {
-            Type                openGeneric   = typeof(IMessageHandler<,>);
+            Type openGeneric = typeof(IMessageHandler<,>);
             List<TSubscription> subscriptions = new();
             foreach (Type interfaceType in handlerType.GetInterfaces())
             {
                 if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == openGeneric)
                 {
                     Type[] genericArguments = interfaceType.GetGenericArguments();
-                    Type   clientType       = genericArguments[0];
-                    Type   thisClientType   = typeof(TClient);
+                    Type clientType = genericArguments[0];
+                    Type thisClientType = typeof(TClient);
                     if (thisClientType.IsAssignableFrom(genericArguments[0]))
                     {
                         TSubscription? subscription = ResolveByMessage(genericArguments[1]);
