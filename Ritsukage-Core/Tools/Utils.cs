@@ -4,11 +4,13 @@ using Ritsukage.Tools.Console;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -302,6 +304,7 @@ namespace Ritsukage.Tools
             {
                 "app" => "Mozilla/5.0 BiliDroid/5.51.1 (bbcallen@gmail.com)",
                 "pc" => "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/82.0.4056.0 Safari/537.36 Edg/82.0.431.0",
+                "bangumi" => $"BAKAOLC/Ritsukage-Core/{FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion} (https://github.com/BAKAOLC/Ritsukage-Core)",
                 _ => "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",
             };
 
@@ -317,14 +320,14 @@ namespace Ritsukage.Tools
         }
 
         public static string HttpGET(string Url, string postDataStr = "", long timeout = 20000,
-            string cookie = "", string referer = "", string origin = "")
+            string cookie = "", string referer = "", string origin = "", string ua = "pc")
         {
             HttpWebRequest request = null;
             try
             {
                 request = CreateHttpWebRequest(Url + (string.IsNullOrWhiteSpace(postDataStr) ? "" : "?" + postDataStr));
                 request.Timeout = (int)timeout;
-                SetHttpHeaders(request, "pc", cookie);
+                SetHttpHeaders(request, ua, cookie);
                 if (!string.IsNullOrWhiteSpace(referer))
                     request.Referer = referer;
                 if (!string.IsNullOrWhiteSpace(origin))
