@@ -20,7 +20,7 @@ namespace Ritsukage.QQ.Commands
         {
             try
             {
-                var json = JObject.Parse(Utils.HttpGET("https://api.bgm.tv/calendar", ua: "bangumi"));
+                var json = JArray.Parse(Utils.HttpGET("https://api.bgm.tv/calendar", ua: "bangumi"));
                 // Sunday is 0
                 var dayOfWeek = DateTime.Now.DayOfWeek;
                 int now = (int) dayOfWeek;
@@ -30,7 +30,7 @@ namespace Ritsukage.QQ.Commands
                 }
                 var today = json[now];
                 var weekday = today["weekday"]["cn"];
-                var weekdayJP = today["weekday"]["jp"];
+                var weekdayJP = today["weekday"]["ja"];
                 var reply = new StringBuilder();
                 reply.AppendLine($"今天是{weekday}({weekdayJP})");
                 foreach(var item in today["items"])
