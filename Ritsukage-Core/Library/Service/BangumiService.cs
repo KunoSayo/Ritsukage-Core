@@ -64,7 +64,7 @@ namespace Ritsukage.Library.Service
                     }
                     return bcp.Broadcast.Date == now.Date;
                 })
-                .OrderBy(x => x.Item2.Time.ToString())
+                .OrderBy(x => x.Item2.Broadcast.TimeOfDay)
                 .Select(x => x.x)
                 .ToList();
         }
