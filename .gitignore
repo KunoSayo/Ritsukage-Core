@@ -2,6 +2,7 @@
 /Ritsukage-Core/obj
 /.vs
 /.vscode
+/.idea
 
 TestResults
 /**/bin
