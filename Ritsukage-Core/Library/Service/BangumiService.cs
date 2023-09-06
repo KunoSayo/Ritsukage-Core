@@ -14,7 +14,7 @@ namespace Ritsukage.Library.Service
         public static async Task RefreshBangumis(DateTime now)
         {
             var json = JObject.Parse(Utils.HttpGET("https://unpkg.com/bangumi-data@0.3/dist/data.json"));
-            var items = json["item"];
+            var items = json["items"];
             var tasks = new List<Task>();
             foreach (var item in items)
             {
@@ -74,7 +74,7 @@ namespace Ritsukage.Library.Service
         {
             int last = s.LastIndexOf("/");
             Broadcast = DateTime.Parse(s[2..(last - 1)]);
-            int number = int.Parse(s[(last + 1)..^1]);
+            int number = int.Parse(s[(last + 2)..^1]);
             switch (s[^0])
             {
                 case 'M':
