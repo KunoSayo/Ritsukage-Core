@@ -53,15 +53,20 @@ namespace Ritsukage.Library.Service
         public static async Task<List<BangumiItem>> GetTodayBangumi(DateTime now)
         {
             var items = await Database.GetArrayAsync<BangumiItem>(x => x.Begin.Date <= now.Date && (x.End == null || x.End >= now) && x.Broadcast != null);
-            return items.Where(x =>
-            {
-                var bcp = new BroadcastPeriod(x.Broadcast);
-                while (bcp.Broadcast.Date < now.Date)
+            return items
+                .Select(x => (x, new BroadcastPeriod(x.Broadcast)))
+                .Where(x =>
                 {
-                    bcp.Broadcast += bcp.Time;
-                }
-                return bcp.Broadcast.Date == now.Date;
-            }).ToList();
+                    var bcp = x.Item2;
+                    while (bcp.Broadcast.Date < now.Date)
+                    {
+                        bcp.Broadcast += bcp.Time;
+                    }
+                    return bcp.Broadcast.Date == now.Date;
+                })
+                .OrderBy(x => x.Item2)
+                .Select(x => x.x)
+                .ToList();
         }
     }
 
