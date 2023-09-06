@@ -16,6 +16,7 @@ namespace Ritsukage.QQ.Commands
     [CommandGroup("Bangumi")]
     public static class Bangumi
     {
+
         [Command("Bangumi今日番")]
         [CommandDescription("获取Bangumi日历")]
         public static async void BangumiCalendar(SoraMessage e)
@@ -25,10 +26,12 @@ namespace Ritsukage.QQ.Commands
                 var json = JArray.Parse(Utils.HttpGET("https://api.bgm.tv/calendar", ua: "bangumi"));
                 // Sunday is 0
                 var dayOfWeek = DateTime.Now.DayOfWeek;
+
                 int now = (int)dayOfWeek;
                 --now;
                 if (now < 0)
                 {
+
                     now += 7;
                 }
                 var today = json[now];
@@ -36,6 +39,7 @@ namespace Ritsukage.QQ.Commands
                 var weekdayJP = today["weekday"]["ja"];
                 var reply = new StringBuilder();
                 reply.AppendLine($"今天是{weekday}({weekdayJP})");
+
                 foreach (var item in today["items"])
                 {
                     string nameCN = (string)item["name_cn"];
@@ -47,12 +51,14 @@ namespace Ritsukage.QQ.Commands
                     reply.Append(" (").Append(item["air_date"]).AppendLine("开播) ");
                 }
                 await e.ReplyToOriginal(reply.ToString());
+
             }
             catch
             {
                 await e.ReplyToOriginal("获取信息失败。");
             }
         }
+
 
         [Command("今日番")]
         [CommandDescription("获取今日番")]

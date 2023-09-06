@@ -15,7 +15,7 @@ namespace Acquisition.Aria
         static bool CheckResource()
         {
             if (File.Exists(ExeFile))
-                return File.ReadAllBytes(ExeFile).SequenceEqual(Resource.aria2c);
+                return true;
             return false;
         }
 
