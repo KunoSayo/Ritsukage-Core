@@ -63,9 +63,9 @@ namespace Ritsukage.QQ.Commands
             foreach (var item in bs)
             {
                 reply.Append(item.Title);
-                if (item.Title != null)
+                if (item.ZHTitle != null)
                 {
-                    reply.Append(' ').Append(item.Title).Append(' ');
+                    reply.Append('(').Append(item.ZHTitle).Append(')');
                 }
                 reply.Append(' ').Append(new BroadcastPeriod(item.Broadcast).Broadcast.TimeOfDay).AppendLine();
             }

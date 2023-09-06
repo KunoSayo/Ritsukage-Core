@@ -52,11 +52,11 @@ namespace Ritsukage.Library.Service
 
         public static async Task<List<BangumiItem>> GetTodayBangumi(DateTime now)
         {
-            var items = await Database.GetArrayAsync<BangumiItem>(x => x.Begin.Date <= now.Date && x.Broadcast != null);
+            var items = await Database.GetArrayAsync<BangumiItem>(x => x.Begin.Date <= now.Date && (x.End == null || x.End >= now) && x.Broadcast != null);
             return items.Where(x =>
             {
                 var bcp = new BroadcastPeriod(x.Broadcast);
-                while (bcp.Broadcast < now)
+                while (bcp.Broadcast.Date < now.Date)
                 {
                     bcp.Broadcast += bcp.Time;
                 }
@@ -73,9 +73,9 @@ namespace Ritsukage.Library.Service
         public BroadcastPeriod(string s)
         {
             int last = s.LastIndexOf("/");
-            Broadcast = DateTime.Parse(s[2..(last - 1)]);
+            Broadcast = DateTime.Parse(s[2..last]);
             int number = int.Parse(s[(last + 2)..^1]);
-            switch (s[^0])
+            switch (s[^1])
             {
                 case 'M':
                     {
