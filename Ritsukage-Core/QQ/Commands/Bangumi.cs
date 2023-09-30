@@ -78,6 +78,44 @@ namespace Ritsukage.QQ.Commands
             await e.ReplyToOriginal(reply.ToString());
         }
 
+        [Command("昨日番")]
+        [CommandDescription("获取昨日番")]
+        public static async void Calendar(SoraMessage e)
+        {
+            var bs = await BangumiService.GetTodayBangumi(DateTime.Now.AddDays(-1));
+            var reply = new StringBuilder();
+            foreach (var item in bs)
+            {
+                reply.Append(item.Title);
+                if (item.Title != null)
+                {
+                    reply.Append(' ').Append(item.Title).Append(' ');
+                }
+                reply.Append(' ').Append(new BroadcastPeriod(item.Broadcast).Broadcast.TimeOfDay).AppendLine();
+            }
+            await e.ReplyToOriginal(reply.ToString());
+        }
+
+        [Command("明日番")]
+        [CommandDescription("获取明日香")]
+        public static async void Calendar(SoraMessage e)
+        {
+            var bs = await BangumiService.GetTodayBangumi(DateTime.Now.AddDays(+1));
+            var reply = new StringBuilder();
+            foreach (var item in bs)
+            {
+                reply.Append(item.Title);
+                if (item.Title != null)
+                {
+                    reply.Append(' ').Append(item.Title).Append(' ');
+                }
+                reply.Append(' ').Append(new BroadcastPeriod(item.Broadcast).Broadcast.TimeOfDay).AppendLine();
+            }
+            await e.ReplyToOriginal(reply.ToString());
+        }
+
+        
+        
         [Command("更新番剧信息")]
         [CommandDescription("执行lua代码")]
         [ParameterDescription(1, "代码")]
