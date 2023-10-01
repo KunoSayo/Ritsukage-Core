@@ -62,7 +62,7 @@ namespace Ritsukage.QQ.Commands
 
         [Command("今日番")]
         [CommandDescription("获取今日番")]
-        public static async void Calendar(SoraMessage e)
+        public static async void CalendarToday(SoraMessage e)
         {
             var bs = await BangumiService.GetTodayBangumi(DateTime.Now);
             var reply = new StringBuilder();
@@ -80,7 +80,7 @@ namespace Ritsukage.QQ.Commands
 
         [Command("昨日番")]
         [CommandDescription("获取昨日番")]
-        public static async void CalendarTomorrow(SoraMessage e)
+        public static async void CalendarYesterday(SoraMessage e)
         {
             var bs = await BangumiService.GetTodayBangumi(DateTime.Now.AddDays(-1));
             var reply = new StringBuilder();
@@ -98,7 +98,7 @@ namespace Ritsukage.QQ.Commands
 
         [Command("明日番")]
         [CommandDescription("获取明日香")]
-        public static async void CalendarYesterday(SoraMessage e)
+        public static async void CalendarTomorrow(SoraMessage e)
         {
             var bs = await BangumiService.GetTodayBangumi(DateTime.Now.AddDays(1));
             var reply = new StringBuilder();
