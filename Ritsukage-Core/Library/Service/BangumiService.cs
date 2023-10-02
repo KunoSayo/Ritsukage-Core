@@ -11,11 +11,12 @@ namespace Ritsukage.Library.Service
     public static class BangumiService
     {
 
-        public static async Task RefreshBangumis(DateTime now)
+        public static async Task<DateTime> RefreshBangumis(DateTime now)
         {
             var json = JObject.Parse(Utils.HttpGET("https://unpkg.com/bangumi-data@0.3/dist/data.json"));
             var items = json["items"];
             var tasks = new List<Task>();
+            var latest = DateTime.MinValue;
             foreach (var item in items)
             {
                 string ends = (string)item["end"];
@@ -43,14 +44,23 @@ namespace Ritsukage.Library.Service
                     }
                 }
                 tasks.Add(Database.InsertOrReplaceAsync(bangumiItem));
+                if (bangumiItem.Begin > latest)
+                {
+                    latest = bangumiItem.Begin;
+                }
             }
             foreach (var task in tasks)
             {
                 await task;
             }
+            return latest;
         }
-
-        public static async Task<List<BangumiItem>> GetTodayBangumi(DateTime now)
+        /// <summary>
+        /// 获得某一天的番剧播出信息，按播出时间排序
+        /// </summary>
+        /// <param name="now">查询的时间</param>
+        /// <returns>排序好了的番剧信息</returns>
+        public static async Task<List<BangumiItem>> GetBangumi(DateTime now)
         {
             var items = await Database.GetArrayAsync<BangumiItem>(x => x.Begin.Date <= now.Date && (x.End == null || x.End >= now) && x.Broadcast != null);
             return items
@@ -66,6 +76,20 @@ namespace Ritsukage.Library.Service
                 })
                 .OrderBy(x => x.Item2.Broadcast.TimeOfDay)
                 .Select(x => x.x)
+                .ToList();
+        }
+
+        /// <summary>
+        /// 搜索番剧信息，上限20个，按照播出时间优先返回
+        /// </summary>
+        /// <param name="name">番剧名字</param>
+        /// <returns>包含符合名字的番剧信息，上限20个</returns>
+        public static async Task<List<BangumiItem>> SearchBangumi(string name)
+        {
+            var items = await Database.GetArrayAsync<BangumiItem>(x => x.Title.Contains(name) || (x.ZHTitle != null && x.ZHTitle.Contains(name)));
+            return items
+                .OrderByDescending(x => x.Begin)
+                .Take(20)
                 .ToList();
         }
     }
