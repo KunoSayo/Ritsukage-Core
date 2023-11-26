@@ -12,7 +12,7 @@ namespace Ritsukage.Library.Bilibili.Model
         /// <summary>
         /// UID
         /// </summary>
-        public int Id;
+        public long Id;
         /// <summary>
         /// 昵称
         /// </summary>
@@ -50,7 +50,7 @@ namespace Ritsukage.Library.Bilibili.Model
         #endregion
 
         #region 方法
-        public int GetLiveRoomId() => GetLiveRoomId(Id);
+        public long GetLiveRoomId() => GetLiveRoomId(Id);
         public LiveRoom GetLiveRoom() => LiveRoom.Get(GetLiveRoomId());
 
         public Dynamic[] GetDynamicList(ulong offset = 0) => Dynamic.GetDynamicList(Id, offset);
@@ -74,7 +74,7 @@ namespace Ritsukage.Library.Bilibili.Model
         #endregion
 
         #region 构造
-        public static User Get(int id)
+        public static User Get(long id)
         {
             //var info = Hibi.HibiBilibili.GetUserInfo(id);
             var info = JObject.Parse(Utils.HttpGET("https://api.bilibili.com/x/web-interface/card?jsonp=jsonp&photo=1&mid=" + id));
@@ -87,7 +87,7 @@ namespace Ritsukage.Library.Bilibili.Model
             */
             return new User()
             {
-                Id = (int)info["data"]["card"]["mid"],
+                Id = (long)info["data"]["card"]["mid"],
                 Name = (string)info["data"]["card"]["name"],
                 Sex = (string)info["data"]["card"]["sex"],
                 FaceUrl = (string)info["data"]["card"]["face"],
@@ -101,12 +101,12 @@ namespace Ritsukage.Library.Bilibili.Model
         #endregion
 
         #region 静态方法
-        public static int GetLiveRoomId(int id)
+        public static long GetLiveRoomId(long id)
         {
             var info = JObject.Parse(Utils.HttpGET("https://api.live.bilibili.com/room/v1/Room/getRoomInfoOld?mid=" + id));
             if ((int)info["code"] != 0)
                 throw new Exception((string)info["message"]);
-            return (int)info["data"]["roomid"];
+            return (long)info["data"]["roomid"];
         }
         #endregion
     }

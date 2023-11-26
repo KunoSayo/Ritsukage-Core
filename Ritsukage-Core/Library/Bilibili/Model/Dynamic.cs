@@ -379,7 +379,7 @@ namespace Ritsukage.Library.Bilibili.Model
         #endregion
 
         #region 静态方法
-        public static Dynamic[] GetDynamicList(int uid, ulong offset = 0)
+        public static Dynamic[] GetDynamicList(long uid, ulong offset = 0)
         {
             var data = JObject.Parse(Utils.HttpGET("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?host_uid=" + uid + "&offset_dynamic_id=" + offset));
             var list = (JArray)data["data"]["cards"];

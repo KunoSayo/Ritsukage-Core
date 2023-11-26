@@ -63,7 +63,7 @@ namespace Ritsukage.Library.Bilibili.Model
         /// <summary>
         /// 用户ID
         /// </summary>
-        public int UserId;
+        public long UserId;
         /// <summary>
         /// 用户名称
         /// </summary>
@@ -149,7 +149,7 @@ namespace Ritsukage.Library.Bilibili.Model
                 AreaId = (int)data["tid"],
                 AreaName = (string)data["tname"],
                 Duration = new TimeSpan(0, 0, (int)data["duration"]),
-                UserId = (int)data["owner"]["mid"],
+                UserId = (long)data["owner"]["mid"],
                 UserName = (string)data["owner"]["name"],
                 UserFaceUrl = (string)data["owner"]["face"],
             };

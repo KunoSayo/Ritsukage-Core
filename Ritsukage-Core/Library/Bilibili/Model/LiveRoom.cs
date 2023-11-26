@@ -13,7 +13,7 @@ namespace Ritsukage.Library.Bilibili.Model
         /// <summary>
         /// 用户uid
         /// </summary>
-        public int UserId;
+        public long UserId;
         /// <summary>
         /// 用户名
         /// </summary>
@@ -104,7 +104,7 @@ namespace Ritsukage.Library.Bilibili.Model
         #endregion
 
         #region 构造
-        public static LiveRoom Get(int id)
+        public static LiveRoom Get(long id)
         {
             var info = JObject.Parse(Utils.HttpGET("http://api.live.bilibili.com/room/v1/Room/get_info?room_id=" + id));
             if ((int)info["code"] != 0)
@@ -116,7 +116,7 @@ namespace Ritsukage.Library.Bilibili.Model
             */
             var room = new LiveRoom()
             {
-                UserId = (int)info["data"]["uid"],
+                UserId = (long)info["data"]["uid"],
                 Id = (int)info["data"]["room_id"],
                 ShortId = (int)info["data"]["short_id"],
                 ParentAreaId = (int)info["data"]["parent_area_id"],
@@ -142,12 +142,12 @@ namespace Ritsukage.Library.Bilibili.Model
         #endregion
 
         #region 静态方法
-        public static int GetUserId(int roomid)
+        public static long GetUserId(long roomid)
         {
             var info = JObject.Parse(Utils.HttpGET("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=" + roomid));
             if ((int)info["code"] != 0)
                 throw new Exception((string)info["message"]);
-            return (int)info["data"]["room_info"]["uid"];
+            return (long)info["data"]["room_info"]["uid"];
         }
         #endregion
     }
